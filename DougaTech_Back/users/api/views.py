@@ -1,25 +1,38 @@
-# from django.contrib.auth import get_user_model
-# from rest_framework.viewsets import GenericViewSet
-# from rest_framework import status
-# from rest_framework.decorators import action
+from django.contrib.auth import get_user_model
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import RetrieveModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import UserSerializer, UserProfileSerializer, AddressSerializer
+from ..models import UserProfile
 
-# from rest_framework.mixins import RetriveViewSet, ListModelMixin, UpdateModelMixin
-# from rest_framework.response import Response
+User = get_user_model()
 
+class UserControleViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
+    permission_classes = [IsAdminUser]
+    lookup_field = 'pk'
 
-# from .serializers import UserSerializer
+class UserProfileViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
-# User = get_user_model()
+    def get_object(self):
+        user = self.request.user
+        return user.profile
 
-# class UserViewSet(RetriveViewSet, ListModelMixin, UpdateModelMixin, GenericViewSet):
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
-#     lookup_field = 'pk'
+    def retrieve(self, request,*args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status.HTTP_200_OK)
 
-#     def get_queryset(self, *args, **kwargs):
-#         assert isinstance(self.request.user.id, int)
-#         return self.queryset.filter(id=self.request.user.id)
-#     @action(detail=False)
-#     def me(self, request):
-#         serializer = UserSerializer(request.user, context={'request': request})
-#         return Response(status.HTTP_200_OK, data=serializer.data)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if not serializer.is_valid():
+            return Response({'error': serializer.errors}, status.HTTP_400_BAD_REQUEST)
+        self.perform_update(serializer)
+        return Response(serializer.data, status.HTTP_200_OK)

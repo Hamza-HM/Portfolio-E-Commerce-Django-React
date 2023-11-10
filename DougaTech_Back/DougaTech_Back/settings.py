@@ -46,13 +46,12 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'corsheaders',
     'rest_framework',
     'djoser',
+    'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
-    # 'rest_framework.authtoken'
 ]
 
 LOCAL_APPS = [
@@ -193,6 +192,7 @@ EMAIL_TIMEOUT = 5
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         # "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
@@ -263,7 +263,7 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    'USER_ID_FIELD': 'username',
+    # 'USER_ID_FIELD': 'username',
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
@@ -298,3 +298,8 @@ DJOSER = {
 # }
 
 AUTH_USER_MODEL = 'users.User'
+
+ADDRESS_CHOICES = (
+    ('B', 'Billing'),
+    ('S', 'Shipping'),
+)

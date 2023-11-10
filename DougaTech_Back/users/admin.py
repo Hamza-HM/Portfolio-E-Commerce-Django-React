@@ -2,22 +2,25 @@ from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import decorators, get_user_model
 from django.utils.translation import gettext_lazy as _
-
-
+# from rest_framework_simplejwt.models import Token
+from .models import UserProfile
 User = get_user_model()
-# if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
-#     # Force the `admin` sign in process to go through the `django-allauth` workflow:
-#     # https://django-allauth.readthedocs.io/en/stable/advanced.html#admin
-#     admin.site.login = decorators.login_required(admin.site.login)  # type: ignore[method-assign]
 
-# admin.site.register(User)
+
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user_email', 'user_username','first_name', 'last_name']
+
+    def user_email(self, obj):
+        return str(obj.user.email)
+
+    def user_username(self, obj):
+        return str(obj.user.username)
+
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-    # form = UserAdminChangeForm
-    # add_form = UserAdminCreationForm
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("name",)}),
+        (None, {"fields": ("email", "password",)}),
+        (_("Personal info"), {"fields": ()}),
         (
             _("Permissions"),
             {
@@ -32,8 +35,8 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["email", "is_superuser"]
-    search_fields = ["name"]
+    list_display = ["email", "is_superuser", 'profile']
+    search_fields = ["email"]
     ordering = ["id"]
     add_fieldsets = (
         (
@@ -44,3 +47,6 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
     )
+
+
+admin.site.register(UserProfile, UserProfileAdmin)
