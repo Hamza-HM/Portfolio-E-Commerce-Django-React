@@ -35,7 +35,7 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["email", "is_superuser", 'profile']
+    list_display = ["email", "is_superuser", 'profile', 'is_activated']
     search_fields = ["email"]
     ordering = ["id"]
     add_fieldsets = (
@@ -47,6 +47,10 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
     )
+    def is_activated(self, obj):
+        return obj.is_active
+    is_activated.boolean = True
+    is_activated.short_description = "Activated"
 
 
 admin.site.register(UserProfile, UserProfileAdmin)

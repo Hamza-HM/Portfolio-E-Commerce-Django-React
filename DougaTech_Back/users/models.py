@@ -23,12 +23,6 @@ class User(AbstractUser):
     def __str__(self):
         return str(self.email)
 
-    def save(self, *args, **kwargs):
-        created = not self.pk
-        super().save(*args, **kwargs)
-        if created:
-            UserProfile.objects.create(user=self)
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     first_name = CharField(_("First Name"), max_length=100, blank=True)
@@ -38,12 +32,11 @@ class UserProfile(models.Model):
         return str(self.user.email)
 
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='address',
-    blank=True, null=True)
-    stree_address = models.CharField(_("Stree Address"), max_length=100)
-    country = CountryField(_("Country"), multiple=True)
-    zip = models.CharField(_("Zip Code"), max_length=100)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='addresses')
+    stree_address = models.CharField(_("Street Address"), max_length=100, null=True, blank=True)
+    country = CountryField(_("Country"))
+    zip = models.CharField(_("Zip Code"), max_length=100, null=True, blank=True)
     address_type = models.CharField(_("Address Type"), max_length=1,
-                                    choices = settings.ADDRESS_CHOICES)
+                                    choices = settings.ADDRESS_CHOICES, null=True, blank=True)
     default = models.BooleanField(default=False)
 

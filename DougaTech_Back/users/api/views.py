@@ -33,4 +33,6 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
     permission_classes = [IsAuthenticated]
     
     def get_object(self):
-        return self.request.user.Address
+        user = self.request.user
+        address, created = Address.objects.get_or_create(user=user)
+        return address
