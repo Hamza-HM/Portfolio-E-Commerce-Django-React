@@ -19,10 +19,11 @@ class CategorySerializer(serializers.ModelSerializer):
             'id',
             'title'
         ]
+        
 class LabelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Label
-        Fields = [
+        fields = [
             'id',
             'title'
         ]
@@ -30,7 +31,7 @@ class LabelSerializer(serializers.ModelSerializer):
 class StringSerializer(serializers.StringRelatedField):
     def to_internal_value(self, data):
         return super().to_internal_value(data)
-    
+
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
@@ -41,8 +42,8 @@ class CouponSerializer(serializers.ModelSerializer):
         ]
 
 class ItemSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
-    Label = serializers.SerializerMethodField()
+    category = serializers.StringRelatedField()
+    label = serializers.StringRelatedField()
     class Meta:
         model = Item
         fields = [
@@ -56,11 +57,11 @@ class ItemSerializer(serializers.ModelSerializer):
             'description',
             'image'
         ]
-    def get_category(self, obj):
-        return CategorySerializer(obj.category).data
+    # def get_category(self, obj):
+    #     return CategorySerializer(obj.category).data
 
-    def get_label(self, obj):
-        return LabelSerializer(obj.label).data
+    # def get_label(self, obj):
+    #     return LabelSerializer(obj.label).data
 
 
 class VariationDetailSerializer(serializers.ModelSerializer):
@@ -146,7 +147,7 @@ class ItemVariationSerializer(serializers.ModelSerializer):
 class VariationSerializer(serializers.ModelSerializer):
     item_variations = serializers.SerializerMethodField()
     class Meta:
-        Model  = Variation
+        model  = Variation
         fields = [
             'id',
             'item_variations',
@@ -159,8 +160,8 @@ class VariationSerializer(serializers.ModelSerializer):
         return []
     
 class ItemDetailSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
-    label = serializers.SerializerMethodField()
+    category = serializers.StringRelatedField()
+    label = serializers.StringRelatedField()
     variations = serializers.SerializerMethodField()
     class Meta:
         model = Item
@@ -176,11 +177,11 @@ class ItemDetailSerializer(serializers.ModelSerializer):
             "image",
             "variations",
         ]
-    def get_category(self, obj):
-        return CategorySerializer(obj.category).data
+    # def get_category(self, obj):
+    #     return CategorySerializer(obj.category).data
 
-    def get_label(self, obj):
-        return LabelSerializer(obj.label).data
+    # def get_label(self, obj):
+    #     return LabelSerializer(obj.label).data
     
     def get_variations(self, obj):
-        return VariationSerializer(obj.variation.all(), many=True).data
+        return VariationSerializer(obj.variations.all(), many=True).data

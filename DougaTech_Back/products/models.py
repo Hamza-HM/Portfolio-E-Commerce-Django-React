@@ -21,7 +21,7 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     discount_price = models.FloatField(null=True, blank=True)
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name='category_items')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_items')
     label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='label_items')
     slug = models.SlugField()
     description = models.TextField(blank=True, null=True)

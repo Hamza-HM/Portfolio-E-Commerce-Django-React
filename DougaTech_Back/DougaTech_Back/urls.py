@@ -22,7 +22,8 @@ urlpatterns = [
     #users
     re_path(r'^auth/', include('djoser.urls')),
     path('', include('djoser.urls.jwt')),
-    path('api/', include('users.urls')),
+    path('api/users/', include('users.urls')),
+    path('api/products/', include('products.api.urls'))
     # others
 
 ]
