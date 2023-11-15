@@ -7,6 +7,7 @@ from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import timezone
 from .serializers import (
@@ -103,3 +104,30 @@ class AddToCart(APIView):
             if not order.items.filter(item__id=order_item.id).exists():
                 order.items.add(order_item)
             return Response({'detail': 'Success'}, status.HTTP_200_OK)
+
+
+class OrderDetailView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrderSerializer
+
+    def get_object(self):
+        try:
+            order = Order.objects.get(user=self.request.user,
+                                      ordered=False)
+            return Order
+        except ObjectDoesNotExist:
+            return Response({'detail': 'No active'}, status.HTTP_404_NOT_FOUND)
+
+class AddCouponView(APIView):
+    def post(self, request, *args, **kwargs):
+        code = request.data.get('code', None):
+        if code is None:
+            return Response({'detail': 'Invalid Coupon'}, status.HTTP_400_BAD_REQUEST)
+        try:
+            order = Order.objects.get(user=request.user,
+                                     ordered=False)
+            coupon = get_object_or_404(Coupon, code=code)
+            order.coupon = coupon
+            order.save()
+        except ObjectDoesNotExist:
+            return Response({'detail': 'Invalid data'}, status.HTTP_404_NOT_FOUND)
