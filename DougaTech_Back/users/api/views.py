@@ -40,7 +40,7 @@ class AddressControlViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin
     queryset = Address.objects.all()
 
     def get_queryset(self):
-        address_type = self.request.query_params.get('address_type')
+        address_type = self.request.date.get('address_type')
         if address_type:
             return Address.objects.filter(address_type=address_type)
         return super().get_queryset()
@@ -51,15 +51,18 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
 
     def get_object(self):
         user = self.request.user
-        address_type = self.request.query_params.get('address_type')
+        address_type = self.request.data.get('address_type', None)
 
-        if address_type:
+        if address_type is not None:
             try:
                 address = Address.objects.get(user=user, address_type=address_type)
             except Address.DoesNotExist:
                 address = Address.objects.create(user=user, address_type=address_type)
-                return address 
+                return address
         else:
             return Response({'detail': 'Address type not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         return address
+    
+    # def create(self, request, *args, **kwargs):
+    #     return Response({'detail':f'user= {request.user}'}, status.HTTP_200_OK)
