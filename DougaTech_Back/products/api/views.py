@@ -120,7 +120,7 @@ class OrderDetailView(RetrieveAPIView):
 
 class AddCouponView(APIView):
     def post(self, request, *args, **kwargs):
-        code = request.data.get('code', None):
+        code = request.data.get('code', None)
         if code is None:
             return Response({'detail': 'Invalid Coupon'}, status.HTTP_400_BAD_REQUEST)
         try:
