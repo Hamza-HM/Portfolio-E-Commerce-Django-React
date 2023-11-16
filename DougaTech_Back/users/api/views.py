@@ -20,11 +20,10 @@ from ..models import UserProfile, Address
 
 User = get_user_model()
 
-class UserControleViewSet(ListModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
+class UserControleViewSet(ListModelMixin, GenericViewSet):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
     permission_classes = [IsAdminUser]
-    lookup_field = 'pk'
 
 class UserProfileViewSet(RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     serializer_class = UserProfileSerializer
@@ -38,12 +37,6 @@ class AddressControlViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin
     serializer_class = AddressSerializer
     permission_classes = [IsAdminUser]
     queryset = Address.objects.all()
-
-    def get_queryset(self):
-        address_type = self.request.date.get('address_type')
-        if address_type:
-            return Address.objects.filter(address_type=address_type)
-        return super().get_queryset()
 
 class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = AddressSerializer
