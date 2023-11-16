@@ -3,7 +3,7 @@ from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import decorators, get_user_model
 from django.utils.translation import gettext_lazy as _
 # from rest_framework_simplejwt.models import Token
-from .models import UserProfile
+from .models import UserProfile, Address
 User = get_user_model()
 
 
@@ -52,5 +52,5 @@ class UserAdmin(auth_admin.UserAdmin):
     is_activated.boolean = True
     is_activated.short_description = "Activated"
 
-
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(Address)

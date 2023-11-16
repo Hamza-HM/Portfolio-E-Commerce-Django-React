@@ -5,7 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django.conf import settings
 
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from .managers import UserManager
 
 class User(AbstractUser):
@@ -32,11 +33,25 @@ class UserProfile(models.Model):
         return str(self.user.email)
 
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='addresses')
-    stree_address = models.CharField(_("Street Address"), max_length=100, null=True, blank=True)
-    country = CountryField(_("Country"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='address')
+    street_address = models.CharField(_("Street Address"), max_length=100, null=True, blank=True)
+    country = CountryField(multiple=False)
     zip = models.CharField(_("Zip Code"), max_length=100, null=True, blank=True)
     address_type = models.CharField(_("Address Type"), max_length=1,
                                     choices = settings.ADDRESS_CHOICES, null=True, blank=True)
-    default = models.BooleanField(default=False)
+    default_addr = models.BooleanField(default=False)
 
+    def __str__(self):
+        return str(self.user)
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created and not hasattr(instance, 'profile'):
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
+    else:
+        UserProfile.objects.create(user=instance)

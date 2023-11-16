@@ -56,13 +56,21 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         if address_type is not None:
             try:
                 address = Address.objects.get(user=user, address_type=address_type)
-            except Address.DoesNotExist:
-                address = Address.objects.create(user=user, address_type=address_type)
                 return address
+            except Address.DoesNotExist:
+                return Response({'detail': 'Address does not exist for this user and type.'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'detail': 'Address type not provided'}, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        address_type = request.data.get('address_type')
+        if address_type is not None:
+            try:
+                address = Address.objects.get(user=user, address_type=address_type)
+                return Response({'detail': 'Address type already exists'}, status=status.HTTP_200_OK)
+            except Address.DoesNotExist:
+                return super().create(request, *args, **kwargs)
+        return Response({'detail': 'Address type not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return address
-    
-    # def create(self, request, *args, **kwargs):
-    #     return Response({'detail':f'user= {request.user}'}, status.HTTP_200_OK)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
