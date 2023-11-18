@@ -42,7 +42,16 @@ class ItemView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
 class CouponView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CouponSerializer
-    queryset = Coupon.objects.all()
+    
+    def get_object(self):
+        code = self.request.data.get('code', None)
+        if code is None:
+            return None
+        try:
+            coupon = Coupon.objects.get(code=code)
+            return coupon
+        except Coupon.DoesNotExist:
+            return None
 
 class CategoryView(ListAPIView):
     permission_classes = [AllowAny]
