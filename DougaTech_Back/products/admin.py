@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, Variation, ItemVariation, OrderItem, Category, Label, Payment, Coupon, Refund
+from .models import Item, Variation, Order,  ItemVariation, OrderItem, Category, Label, Payment, Coupon, Refund
 # Register your models here.
 
 def make_refund_accepted(modeladmin, request, queryset):
@@ -59,7 +59,7 @@ class VariationAdmin(admin.ModelAdmin):
 
 
 
-
+admin.site.register(Order)
 admin.site.register(Item)
 admin.site.register(OrderItem)
 admin.site.register(Category)

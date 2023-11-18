@@ -9,7 +9,7 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 
-from datetime import timezone
+from django.utils import timezone
 from .serializers import (
     ItemDetailSerializer,
     ItemSerializer,
@@ -69,8 +69,7 @@ class AddToCart(APIView):
 
         item = get_object_or_404(Item, slug=slug)
         min_variations_count = Variation.objects.filter(item=item).count()
-
-        if len(variations < min_variations_count):
+        if len(variations) < min_variations_count:
             return Response({"message": "Please specify the required variations."}, status.HTTP_400_BAD_REQUEST)
 
         user = request.user
@@ -81,7 +80,7 @@ class AddToCart(APIView):
         )
 
         for v in variations:
-            order_item_qs = order_item_qs.filter(item_variations_exact=v)
+            order_item_qs = order_item_qs.filter(item_variations__exact=v)
 
         if order_item_qs.exists():
             order_item = order_item_qs.first()
@@ -96,22 +95,21 @@ class AddToCart(APIView):
             order_item.item_variations.add(*variations)
             order_item.save()
 
-            order_qs = Order.objects.filter(user=user, ordered=False)
+        order_qs = Order.objects.filter(user=user, ordered=False)
 
-            if not order_qs.exists():
-                ordered_date= timezone.now()
-                order = Order.objects.create(
-                    user=user,
-                    ordered_date=ordered_date
-                )
-                order.items.add(order_item)
-                return Response(status.HTTP_200_OK)
+        if not order_qs.exists():
+            ordered_date= timezone.now()
+            order = Order.objects.create(
+                user=user,
+                ordered_date=ordered_date
+            )
+            order.items.add(order_item)
+            return Response({'detail': 'order created'}, status.HTTP_200_OK)
 
-            order = order_qs.first()
-            if not order.items.filter(item__id=order_item.id).exists():
-                order.items.add(order_item)
-            return Response({'detail': 'Success'}, status.HTTP_200_OK)
-
+        order = order_qs.first()
+        if not order.items.filter(item__id=order_item.id).exists():
+            order.items.add(order_item)
+        return Response({'detail': 'Success'}, status.HTTP_200_OK)
 
 class OrderDetailView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]

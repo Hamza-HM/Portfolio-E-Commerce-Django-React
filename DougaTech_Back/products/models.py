@@ -53,7 +53,7 @@ class ItemVariation(models.Model):
         return str(self.value)
 
 class OrderItem(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='order_items')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='order_items')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='order_item')
     item_variations = models.ManyToManyField(ItemVariation)
     ordered = models.BooleanField(default=False)
