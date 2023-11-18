@@ -40,9 +40,20 @@ class ItemView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         return Response({'detail': 'method not allowed'})
 
 class CouponView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = CouponSerializer
-    queryset = Coupon.objects.all()
+    permission_classes = [IsAuthenticated]
+    def get_object(self):
+        code = self.request.data.get('code', None)
+        if code is not None:
+            try:
+                coupon = Coupon.objects.get(code=code)
+                return coupon
+            except Coupon.DoesNotExist:
+                # return Reponse({'detail': 'Coupon not found'}, status.HTTP_400_BAD_REQUEST)
+                return None
+        else:
+            return Response({'detail': 'Invalid data'}, status.HTTP_404_NOT_FOUND)
+
 
 class CategoryView(ListAPIView):
     permission_classes = [AllowAny]
