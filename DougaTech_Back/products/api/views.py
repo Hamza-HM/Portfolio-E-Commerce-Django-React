@@ -40,9 +40,7 @@ class ItemView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         return Response({'detail': 'method not allowed'})
 
 class CouponView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = CouponSerializer
-    
     def get_object(self):
         code = self.request.data.get('code', None)
         if code is None:
