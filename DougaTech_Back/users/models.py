@@ -28,6 +28,17 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     first_name = CharField(_("First Name"), max_length=100, blank=True)
     last_name = CharField(_("Last Name"), max_length=100, blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    shipping_address = models.TextField(blank=True)
+    billing_address = models.TextField(blank=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile/', blank=True)
+    loyalty_points = models.IntegerField(default=0)
+    social_media_facebook = models.URLField(blank=True)
+    social_media_twitter = models.URLField(blank=True)
+    social_media_instagram = models.URLField(blank=True)
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
+    one_click_purchasing = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.user.email)

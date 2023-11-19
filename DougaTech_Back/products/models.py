@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from users.models import Address
+import math
 
 User = get_user_model()
 # Create your models here.
@@ -19,7 +20,7 @@ class Label(models.Model):
 class Item(models.Model):
     #variants TODO
     title = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.FloatField()
     discount_price = models.FloatField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_items')
     label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='label_items')
@@ -76,8 +77,8 @@ class OrderItem(models.Model):
 
     def get_final_price(self):
         if self.item.discount_price:
-            return str(self.get_amount_saved())
-        return str(self.get_total_item_price())
+            return self.get_amount_saved()
+        return self.get_total_item_price()
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
@@ -97,14 +98,15 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.user)
+
     def get_total(self):
-        total = 0
-        for order_item in items:
+        total = 0.0
+        for order_item in self.items.all():
             total += order_item.get_final_price()
         if self.coupon is not None:
             total -= self.coupon.amount
-        return total
-    
+        return custom_round(total)
+
 class Payment(models.Model):
     user = models.ForeignKey(User,
                              on_delete=models.SET_NULL, blank=True, null=True, related_name="payments")
@@ -121,7 +123,7 @@ class Coupon(models.Model):
 
     def __str__(self):
         return str(self.code)
-    
+
 class Refund(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     reason = models.TextField()
@@ -130,3 +132,8 @@ class Refund(models.Model):
 
     def __str__(self):
         return str(self.order)
+
+def custom_round(number):
+    rounded_number = round(number, 2)
+    rounded_down_number = math.floor(rounded_number * 100) / 100
+    return rounded_down_number

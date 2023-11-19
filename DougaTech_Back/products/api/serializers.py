@@ -42,8 +42,9 @@ class CouponSerializer(serializers.ModelSerializer):
         ]
 
 class ItemSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
-    label = serializers.StringRelatedField()
+    category = CategorySerializer()  # Use the CategorySerializer directly
+    label = LabelSerializer()  # Use the LabelSerializer directly
+
     class Meta:
         model = Item
         fields = [
@@ -57,11 +58,7 @@ class ItemSerializer(serializers.ModelSerializer):
             'description',
             'image'
         ]
-    # def get_category(self, obj):
-    #     return CategorySerializer(obj.category).data
 
-    # def get_label(self, obj):
-    #     return LabelSerializer(obj.label).data
 
 
 class VariationDetailSerializer(serializers.ModelSerializer):
@@ -75,7 +72,7 @@ class VariationDetailSerializer(serializers.ModelSerializer):
 class ItemVariationDetailSerializer(serializers.ModelSerializer):
     variation = serializers.SerializerMethodField()
     class Meta:
-        model = ItemSerializer
+        model = ItemVariation
         fields = [
             'id',
             'variation',
@@ -113,20 +110,24 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     order_items = serializers.SerializerMethodField()
     coupon = serializers.SerializerMethodField()
+    total = serializers.SerializerMethodField()
+
     class Meta:
-        model = OrderItem
+        model = Order
         fields = [
             'id',
             'order_items',
             'total',
             'coupon'
         ]
+
     def get_order_items(self, obj):
         try:
-            if obj.items is not None:
-                return OrderItemSerializer(obj.items.all()).data
+            if obj.items.all().exists():
+                return OrderItemSerializer(obj.items.all(), many=True).data
         except ObjectDoesNotExist as e:
             return {'error': str(e)}
+
     def get_total(self, obj):
         return obj.get_total()
 
@@ -134,6 +135,7 @@ class OrderSerializer(serializers.ModelSerializer):
         if obj.coupon is None:
             return None
         return CouponSerializer(obj.coupon).data
+
 
 class ItemVariationSerializer(serializers.ModelSerializer):
     class Meta:
