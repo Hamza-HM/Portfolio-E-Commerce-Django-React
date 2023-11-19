@@ -177,43 +177,88 @@ class OrderDetailView(RetrieveAPIView):
             return None
 
 class PaymentView(APIView):
-    permission_classes = (IsAuthenticated,)
+  permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        order = Order.objects.get(user=self.request.user, ordered=False)
-        user_profile = UserProfile.objects.get(user=self.request.user)
-        token = request.data.get('stripe_token')
-        selected_billing_id = request.data.get("billing")
-        selected_shipping_id = request.data.get("shipping")
-        billing_address = Address.objects.get(id=selected_billing_id)
-        shipping_address = Address.objects.get(id=selected_shipping_id)
+  def post(self, request, *args, **kwargs):
+      order = Order.objects.select_related('user', 'user__userprofile').get(user=self.request.user, ordered=False)
+      userprofile = order.user.userprofile
+      token = request.data.get('stripeToken')
+      selected_billing_id = request.data.get("billing")
+      selected_shipping_id = request.data.get("shipping")
+      billing_address = Address.objects.filter(id=selected_billing_id)
+      shipping_address = Address.objects.filter(id=selected_shipping_id)
+      if token:
+          payment_method = stripe.PaymentMethod.create(
+              type="card",
+              card={
+                "token": token,
+              },
+          )
+      if userprofile.stripe_customer_id:
+          stripe.PaymentMethod.attach(payment_method.id, customer=userprofile.stripe_customer_id)
+          stripe.Customer.modify(
+              userprofile.stripe_customer_id,
+              invoice_settings={"default_payment_method": payment_method.id},
+          )
+      else:
+          customer = stripe.Customer.create(
+              email=self.request.user.email,
+              payment_method=payment_method.id,
+          )
+          userprofile.stripe_customer_id = customer.id
+          userprofile.one_click_purchasing = True
+          userprofile.save()
 
-        if token:
-            payment_method = stripe.PaymentMethod.create(
-                type='card',
-                card={
-                    "token": token
-                }
-            )
-        if user_profile.stripe_customer_id:
-            stripe.PaymentMethod.attach(
-                payment_method.id,
-                customer=user_profile.stripe_customer_id
-            )
-            stripe.Customer.modify(
-                user_profile.stripe_customer_id,
-                invoice_settings={'default_payment_method': payment_method.id}
-            )
-        else:
-            customer = stripe.Customer.create(
-                email=self.request.user.email,
-                payment_method=payment_method.id
-            )
-            user_profile.stripe_customer_id = customer.id
-            user_profile.one_click_purchasing = True
-            user_profile.save()
-        
-        amount = int(order.get_total())
+      amount = int(order.get_total() * 100)
+
+      try:
+          payment_intent = stripe.PaymentIntent.create(
+              amount=amount,
+              currency='usd',
+              customer=userprofile.stripe_customer_id,
+          )
+
+          payment = Payment()
+          payment.stripe_payment_intent_id = payment_intent.id
+          payment.user = self.request.user
+          payment.amount = order.get_total()
+          payment.save()
+
+          order_items = order.items.all()
+          order_items.update(ordered=True)
+
+          order = Order.objects.get(user=self.request.user, ordered=False)
+          order.ordered = True
+          order.payment = payment
+          order.billing_address = billing_address.first()
+          order.shipping_address = shipping_address.first()
+          order.save()
+
+          return Response({"message": "Your order was successful!"}, status=HTTP_200_OK)
+
+      except stripe.error.CardError as e:
+          body = e.json_body
+          err = body.get('error', {})
+          return Response({"message": f"{err.get('message')}"}, status=HTTP_400_BAD_REQUEST)
+
+      except stripe.error.RateLimitError as e:
+          return Response({"message": "Rate limit error"}, status=HTTP_400_BAD_REQUEST)
+
+      except stripe.error.InvalidRequestError as e:
+          return Response({"message": "Invalid parameters"}, status=HTTP_400_BAD_REQUEST)
+
+      except stripe.error.AuthenticationError as e:
+          return Response({"message": "Not authenticated"}, status=HTTP_400_BAD_REQUEST)
+
+      except stripe.error.APIConnectionError as e:
+          return Response({"message": "Network error"}, status=HTTP_400_BAD_REQUEST)
+
+      except stripe.error.StripeError as e:
+          return Response({"message": "Something went wrong. You were not charged. Please try again."}, status=HTTP_400_BAD_REQUEST)
+
+      except Exception as e:
+          return Response({"message": "A serious error occurred. We have been notified."}, status=HTTP_400_BAD_REQUEST)
+
 
 class AddCouponView(APIView):
     def post(self, request, *args, **kwargs):
