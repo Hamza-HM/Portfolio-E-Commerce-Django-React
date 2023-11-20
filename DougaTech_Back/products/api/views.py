@@ -26,9 +26,10 @@ from ..models import (
     Category,
     Variation,
     OrderItem,
-    Order
+    Order,
+    Payment
 )
-from users.models import UserProfile
+from users.models import UserProfile, Address
 
 class ItemView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     permission_classes = [AllowAny]
@@ -180,8 +181,8 @@ class PaymentView(APIView):
   permission_classes = [IsAuthenticated]
 
   def post(self, request, *args, **kwargs):
-      order = Order.objects.select_related('user', 'user__userprofile').get(user=self.request.user, ordered=False)
-      userprofile = order.user.userprofile
+      order = Order.objects.select_related('user').get(user=self.request.user, ordered=False)
+      userprofile = order.user.profile
       token = request.data.get('stripeToken')
       selected_billing_id = request.data.get("billing")
       selected_shipping_id = request.data.get("shipping")
@@ -194,6 +195,8 @@ class PaymentView(APIView):
                 "token": token,
               },
           )
+      else:
+          return Response({"message": "No payment method provided."}, status.HTTP_400_BAD_REQUEST)
       if userprofile.stripe_customer_id:
           stripe.PaymentMethod.attach(payment_method.id, customer=userprofile.stripe_customer_id)
           stripe.Customer.modify(
