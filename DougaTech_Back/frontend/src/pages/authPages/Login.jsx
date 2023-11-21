@@ -1,11 +1,9 @@
 
-
 const Login = () => {
-    return (
-        <>
-        hello from login!
-        </>
-    )
+
+  return (
+    <div>Login</div>
+  )
 }
 
-export default Login;
+export default Login

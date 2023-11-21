@@ -4,7 +4,7 @@ import Footer from "../layouts/Footer";
 import { useEffect } from "react";
 import { checkAuthenticated } from "../actions/auth";
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
     const dispatch = useDispatch()
     const cart = {
         'first': 'first',
@@ -17,7 +17,7 @@ useEffect(() => {
     return (
         <div>
             <Navbar cart={cart}/>
-            {children}
+            { children }
             <Footer />
         </div>
     );

@@ -3,7 +3,7 @@
 const Home = () => {
     return (
         <>
-        hello from home!
+        home!
         </>
     )
 }

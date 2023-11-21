@@ -4,6 +4,8 @@ import store from './store';
 import Layout from './hocs/Layout';
 
 import Home from './pages/mainPages/Home';
+import SignUp from './pages/authPages/SignUp';
+import Login from './pages/authPages/Login';
 
 
 const App = () => {
@@ -13,6 +15,8 @@ const App = () => {
         <Layout>
           <Routes>
             <Route exact path='/' element={<Home />}/>
+            <Route exact path='/signup' element={<SignUp />}/>
+            <Route exact path='/login' element={<Login />}/>
           </Routes>
         </Layout>
       </Router>

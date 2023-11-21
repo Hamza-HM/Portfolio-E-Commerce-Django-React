@@ -3,7 +3,7 @@
 const Footer = () => {
     return (
         <>
-        hello from footer!
+        footer!
         </>
     )
 }
