@@ -18,6 +18,9 @@ import { FaFacebook } from "react-icons/fa"; // Importing Facebook and Google ic
 import { FcGoogle } from "react-icons/fc";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import {useDispatch, useSelector} from 'react-redux'
+import { login } from "../../actions/auth";
+import { useNavigate } from "react-router-dom";
 
 const initialValues = {
   email: "",
@@ -26,12 +29,15 @@ const initialValues = {
 const validationSchemas = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
+    // .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
 });
 
 const Login = () => {
   const { colorMode } = useColorMode();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const { isAuthenticated } = useSelector(state => state.auh)
 
   const handleFacebookLogin = () => {
     // Implement Facebook login functionality
@@ -44,12 +50,17 @@ const Login = () => {
   };
   const handleSubmit = (values, { setSubmitting }) => {
     // Implement Google login functionality
-    const { email, password } = values;
-    setTimeout(() => {
-      console.log(email, password);
+    if (values){
+      dispatch(login(values))
       setSubmitting(false);
-    }, 3000);
+    }
   };
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate('/');
+  //   }
+  // }, [isAuthenticated])
 
   return (
     <Center>
