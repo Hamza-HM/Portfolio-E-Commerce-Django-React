@@ -5,6 +5,7 @@ import {
   Center,
   Divider,
   FormControl,
+  FormErrorMessage,
   FormHelperText,
   Input,
   InputGroup,
@@ -16,16 +17,46 @@ import {
 import { EmailIcon, InfoIcon, LockIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const SignUp = () => {
   const { colorMode } = useColorMode();
 
+  const initialValues = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    re_password: "",
+  };
+
+  const validationSchema = Yup.object().shape({
+    first_name: Yup.string().required("First Name is required"),
+    last_name: Yup.string().required("Last Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    re_password: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
+
+  const handleSubmit = (values, { setSubmitting }) => {
+    // Implement your submit logic here
+    console.log(values);
+    setSubmitting(false);
+  };
+
   const handleFacebookSignUp = () => {
     // Implement Facebook sign-up functionality
+    console.log("facebook Signup");
   };
 
   const handleGoogleSignUp = () => {
     // Implement Google sign-up functionality
+    console.log("google Signup");
   };
 
   return (
@@ -36,107 +67,164 @@ const SignUp = () => {
         p={5}
         className={colorMode === "light" ? "mdx-prose" : ""}
       >
-        <form action="submit">
-          <Stack spacing={2}>
-            <FormControl isRequired>
-              <InputGroup>
-                <InputLeftElement children={<InfoIcon />} />
-                <Input
-                  type="name"
-                  name="first_name"
-                  placeholder="First Name"
-                  aria-label="First Name"
-                />
-              </InputGroup>
-            </FormControl>
-            <FormControl isRequired>
-              <InputGroup>
-                <InputLeftElement children={<InfoIcon />} />
-                <Input
-                  type="name"
-                  name="last_name"
-                  placeholder="Last Name"
-                  aria-label="Last Name"
-                />
-              </InputGroup>
-            </FormControl>
-            <Divider spacing={3} borderColor="gray.500" />
-            <FormControl isRequired>
-              <InputGroup>
-                <InputLeftElement children={<EmailIcon />} />
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  aria-label="Email"
-                />
-              </InputGroup>
-            </FormControl>
-            <FormControl isRequired>
-              <InputGroup>
-                <InputLeftElement children={<LockIcon />} />
-                <Input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  aria-label="Password"
-                />
-              </InputGroup>
-            </FormControl>
-            <FormControl isRequired>
-              <InputGroup>
-                <InputLeftElement children={<LockIcon />} />
-                <Input
-                  type="password"
-                  name="re_password"
-                  placeholder="Confirm password"
-                  aria-label="Confirm password"
-                />
-              </InputGroup>
-            </FormControl>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Field name="first_name">
+                {({ field, form }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={
+                      form.errors.first_name && form.touched.first_name
+                    }
+                  >
+                    <InputGroup>
+                      <InputLeftElement children={<InfoIcon />} />
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="First Name"
+                        aria-label="First Name"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>
+                      {form.errors.first_name}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
 
-            <Button
-              boxShadow="sm"
-              _hover={{ boxShadow: "md" }}
-              _active={{ boxShadow: "lg" }}
-              type="submit"
-            >
-              Submit
-            </Button>
+              <Field name="last_name">
+                {({ field, form }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={form.errors.last_name && form.touched.last_name}
+                  >
+                    <InputGroup>
+                      <InputLeftElement children={<InfoIcon />} />
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Last Name"
+                        aria-label="Last Name"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{form.errors.last_name}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
 
-            {/* Facebook */}
-            <Button
-              w={"full"}
-              colorScheme={"facebook"}
-              leftIcon={<FaFacebook />}
-              onClick={handleFacebookSignUp} // Add onClick handler for Facebook sign-up
-            >
-              <Center>
-                <Text>Continue with Facebook</Text>
-              </Center>
-            </Button>
+              <Divider spacing={3} borderColor="gray.500" />
 
-            {/* Google */}
-            <Button
-              w={"full"}
-              variant={"outline"}
-              leftIcon={<FaGoogle />}
-              onClick={handleGoogleSignUp} // Add onClick handler for Google sign-up
-            >
-              <Center>
-                <Text>Sign in with Google</Text>
-              </Center>
-            </Button>
+              <Field name="email">
+                {({ field, form }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={form.errors.email && form.touched.email}
+                  >
+                    <InputGroup>
+                      <InputLeftElement children={<EmailIcon />} />
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="Email"
+                        aria-label="Email"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
 
-            <FormControl>
-              <FormHelperText textAlign="center">
-                We will never share your info!
-                <br />
-                🤐
-              </FormHelperText>
-            </FormControl>
-          </Stack>
-        </form>
+              <Field name="password">
+                {({ field, form }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={form.errors.password && form.touched.password}
+                  >
+                    <InputGroup>
+                      <InputLeftElement children={<LockIcon />} />
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Password"
+                        aria-label="Password"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              <Field name="re_password">
+                {({ field, form }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={
+                      form.errors.re_password && form.touched.re_password
+                    }
+                  >
+                    <InputGroup>
+                      <InputLeftElement children={<LockIcon />} />
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Confirm password"
+                        aria-label="Confirm password"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>
+                      {form.errors.re_password}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              <Button
+                type="submit"
+                w="full"
+                isLoading={isSubmitting}
+                boxShadow="sm"
+              >
+                Submit
+              </Button>
+
+              <Button
+                w={"full"}
+                colorScheme={"facebook"}
+                leftIcon={<FaFacebook />}
+                onClick={handleFacebookSignUp} // Add onClick handler for Facebook sign-up
+              >
+                <Center>
+                  <Text>Continue with Facebook</Text>
+                </Center>
+              </Button>
+
+              <Button
+                w={"full"}
+                variant={"outline"}
+                leftIcon={<FcGoogle />}
+                onClick={handleGoogleSignUp} // Add onClick handler for Google sign-up
+              >
+                <Center>
+                  <Text>Sign in with Google</Text>
+                </Center>
+              </Button>
+
+              <FormControl>
+                <FormHelperText textAlign="center">
+                  We will never share your info!
+                  <br />
+                  🤐
+                </FormHelperText>
+              </FormControl>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </Center>
   );
