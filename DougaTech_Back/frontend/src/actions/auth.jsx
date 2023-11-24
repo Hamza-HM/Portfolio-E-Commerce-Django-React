@@ -8,6 +8,7 @@ import {
   signUpFail,
   authenticatedSuccess,
   authenticatedFail,
+  logoutPerform,
 } from "../reducers/auth";
 
 export const login = createAsyncThunk(
@@ -87,12 +88,11 @@ export const register = createAsyncThunk(
   }
 );
 
-
 export const checkAuthenticated = createAsyncThunk(
   "auth/checkAuthenticated",
   async (_, { dispatch }) => {
     if (localStorage.getItem("access")) {
-      console.log(getCookie('csrftoken'))
+      console.log(getCookie("csrftoken"));
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -103,18 +103,29 @@ export const checkAuthenticated = createAsyncThunk(
         token: localStorage.getItem("access"),
       };
       try {
-        const res = await axios.post(import.meta.env.VITE_VERIFY_USER_URL, body, config);
-        if(res.data.code !== "token_not_valid") {
-            dispatch(authenticatedSuccess());
-            // dispatch(load_user());
-          }else {
-            dispatch(authenticatedFail());
-          }
+        const res = await axios.post(
+          import.meta.env.VITE_VERIFY_USER_URL,
+          body,
+          config
+        );
+        if (res.data.code !== "token_not_valid") {
+          dispatch(authenticatedSuccess());
+          // dispatch(load_user());
+        } else {
+          dispatch(authenticatedFail());
+        }
       } catch (err) {
         dispatch(authenticatedFail());
       }
     } else {
       dispatch(authenticatedFail());
     }
+  }
+);
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    dispatch(logoutPerform());
   }
 );

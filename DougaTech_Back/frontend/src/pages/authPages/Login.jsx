@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import { FaFacebook } from "react-icons/fa"; // Importing Facebook and Google ic
 import { FcGoogle } from "react-icons/fc";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,7 @@ const Login = () => {
   const { colorMode } = useColorMode();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const { isAuthenticated } = useSelector(state => state.auh)
+  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
   const handleFacebookLogin = () => {
     // Implement Facebook login functionality
@@ -50,17 +50,17 @@ const Login = () => {
   };
   const handleSubmit = (values, { setSubmitting }) => {
     // Implement Google login functionality
-    if (values){
-      dispatch(login(values))
+    if (values) {
+      dispatch(login(values));
       setSubmitting(false);
     }
   };
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate('/');
-  //   }
-  // }, [isAuthenticated])
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <Center>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -19,9 +19,15 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../actions/auth";
 
 const SignUp = () => {
   const { colorMode } = useColorMode();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
   const initialValues = {
     first_name: "",
@@ -45,8 +51,10 @@ const SignUp = () => {
 
   const handleSubmit = (values, { setSubmitting }) => {
     // Implement your submit logic here
-    console.log(values);
-    setSubmitting(false);
+    if (values) {
+      dispatch(register(values));
+      setSubmitting(false);
+    }
   };
 
   const handleFacebookSignUp = () => {
@@ -58,6 +66,12 @@ const SignUp = () => {
     // Implement Google sign-up functionality
     console.log("google Signup");
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <Center>
