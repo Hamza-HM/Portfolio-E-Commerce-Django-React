@@ -27,19 +27,19 @@ const SignUp = () => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
-
+  const {isAuthenticated, signup} = useSelector((state) => state.auth);
   const initialValues = {
-    first_name: "",
-    last_name: "",
+    // first_name: "",
+    // last_name: "",
+    username: '',
     email: "",
     password: "",
     re_password: "",
   };
 
   const validationSchema = Yup.object().shape({
-    first_name: Yup.string().required("First Name is required"),
-    last_name: Yup.string().required("Last Name is required"),
+    username: Yup.string().required("First Name is required"),
+    // last_name: Yup.string().required("Last Name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
@@ -49,11 +49,14 @@ const SignUp = () => {
       .required("Confirm Password is required"),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     // Implement your submit logic here
     if (values) {
-      dispatch(register(values));
+      await dispatch(register(values));
       setSubmitting(false);
+      if (signup.response?.id) {
+        resetForm();
+      }
     }
   };
 
@@ -88,7 +91,13 @@ const SignUp = () => {
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="first_name">
+              {signup.error && (
+                <Text textAlign='center' color="red" my='5'>{signup.error.email}</Text>
+              )}
+              {signup.response?.id && (
+                <Text textAlign='center' color="green" my='5'>Success!</Text>
+              )}
+              <Field name="username">
                 {({ field, form }) => (
                   <FormControl
                     isRequired
@@ -101,8 +110,8 @@ const SignUp = () => {
                       <Input
                         {...field}
                         type="text"
-                        placeholder="First Name"
-                        aria-label="First Name"
+                        placeholder="Username"
+                        aria-label="Username"
                       />
                     </InputGroup>
                     <FormErrorMessage>
@@ -111,7 +120,7 @@ const SignUp = () => {
                   </FormControl>
                 )}
               </Field>
-
+{/* 
               <Field name="last_name">
                 {({ field, form }) => (
                   <FormControl
@@ -130,7 +139,7 @@ const SignUp = () => {
                     <FormErrorMessage>{form.errors.last_name}</FormErrorMessage>
                   </FormControl>
                 )}
-              </Field>
+              </Field> */}
 
               <Divider spacing={3} borderColor="gray.500" />
 

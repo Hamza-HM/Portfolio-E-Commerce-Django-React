@@ -61,7 +61,7 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ username, email, password, re_password }, { dispatch }) => {
+  async (values, { dispatch }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -69,21 +69,16 @@ export const register = createAsyncThunk(
       },
       withCredentials: true,
     };
-    const body = {
-      username,
-      email,
-      password,
-      re_password,
-    };
+    const body = values
     try {
       const res = await axios.post(
         import.meta.env.VITE_REGISTER_URL,
-        config,
-        body
+        body,
+        config
       );
       dispatch(signUpSuccess(res.data));
     } catch (err) {
-      dispatch(signUpFail(err));
+      dispatch(signUpFail(err.response.data));
     }
   }
 );

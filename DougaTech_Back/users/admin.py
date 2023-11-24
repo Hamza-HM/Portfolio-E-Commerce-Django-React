@@ -19,7 +19,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
     fieldsets = (
-        (None, {"fields": ("email", "password",)}),
+        (None, {"fields": ("username", "email", "password",)}),
         (_("Personal info"), {"fields": ()}),
         (
             _("Permissions"),
@@ -35,7 +35,7 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["email", "is_superuser", 'profile', 'is_activated']
+    list_display = ["username", "email", "is_superuser", 'profile', 'is_activated']
     search_fields = ["email"]
     ordering = ["id"]
     add_fieldsets = (

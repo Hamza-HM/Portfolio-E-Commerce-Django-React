@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 # AUTHENTICATION_BACKENDS = 'django.contrib.auth.backends.ModelBackend'
 
 
-# SITE_ID = 1
+SITE_ID = 1
 
 # Application definition
 DJANGO_APPS = [

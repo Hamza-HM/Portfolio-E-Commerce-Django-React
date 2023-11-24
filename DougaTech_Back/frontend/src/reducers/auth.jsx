@@ -1,10 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  authenticate: {
+  login: {
     access: localStorage.getItem("access"),
     refresh: localStorage.getItem("refresh"),
-    error: null, // New error field to hold authentication errors
+    error: null,
+    loading: null,
+  },
+  signup: {
+    loading: null,
+    response: null,
+    error: null
   },
   isAuthenticated: null,
   verify: {
@@ -23,35 +29,40 @@ const authSlice = createSlice({
       localStorage.setItem("refresh", refresh);
 
       state.isAuthenticated = true;
-      state.authenticate.access = access;
-      state.authenticate.refresh = refresh;
-      state.authenticate.error = null; // Reset any previous errors on successful login
+      state.login.access = access;
+      state.login.refresh = refresh;
+      state.login.error = null; // Reset any previous errors on successful login
     },
     loginFail: (state, action) => {
       state.isAuthenticated = false;
-      state.authenticate.access = null;
-      state.authenticate.refresh = null;
-      state.authenticate.error = action.payload; // Set the error message from the action payload
+      state.login.access = null;
+      state.login.refresh = null;
+      state.login.error = action.payload; // Set the error message from the action payload
     },
-    signUpSuccess: (state) => {
-      state.isAuthenticated = true;
+    signUpSuccess: (state, action) => {
+      state.isAuthenticated = false;
+      state.signup.response = action.payload;
+      state.signup.error = null
     },
     signUpFail: (state, action) => {
       state.isAuthenticated = false;
-      state.verify.error = action.payload;
+      state.signup.error = action.payload
+      state.signup.response = null;
     },
     authenticatedSuccess: (state) => {
       state.isAuthenticated = true;
+      state.verify.error = null
     },
-    authenticatedFail: (state) => {
+    authenticatedFail: (state, action) => {
       state.isAuthenticated = false;
+      state.verify.error = action.payload
     },
     logoutPerform: (state) => {
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
       state.isAuthenticated = false;
-      state.authenticate.access = null;
-      state.authenticate.refresh = null;
+      state.login.access = null;
+      state.login.refresh = null;
     },
   },
 });
