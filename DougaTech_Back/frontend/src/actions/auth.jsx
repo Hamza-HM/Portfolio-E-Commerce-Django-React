@@ -9,6 +9,8 @@ import {
   authenticatedSuccess,
   authenticatedFail,
   logoutPerform,
+  passwordResetSuccess,
+  passwordResetFail,
 } from "../reducers/auth";
 
 export const login = createAsyncThunk(
@@ -69,7 +71,7 @@ export const register = createAsyncThunk(
       },
       withCredentials: true,
     };
-    const body = values
+    const body = values;
     try {
       const res = await axios.post(
         import.meta.env.VITE_REGISTER_URL,
@@ -117,6 +119,25 @@ export const checkAuthenticated = createAsyncThunk(
     }
   }
 );
+
+export const passwordReset = createAsyncThunk("auth/password_reset");
+async ({ email }, { dispatch }) => {
+  const config = {
+    "Content-Type": "application/json",
+    accept: "application/json",
+    "X-CSRFToken": getCookie("csrftoken"),
+  };
+  const body = {
+    email: email,
+  };
+  console.log(body);
+  try {
+    await axios.post(import.meta.env.VITE_PASSWORD_RESET_URL, body, config);
+    dispatch(passwordResetSuccess());
+  } catch (err) {
+    dispatch(passwordResetFail(err));
+  }
+};
 
 export const logout = createAsyncThunk(
   "auth/logout",

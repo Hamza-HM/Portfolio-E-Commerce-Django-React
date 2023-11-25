@@ -5,12 +5,10 @@ const initialState = {
     access: localStorage.getItem("access"),
     refresh: localStorage.getItem("refresh"),
     error: null,
-    loading: null,
   },
   signup: {
-    loading: null,
     response: null,
-    error: null
+    error: null,
   },
   isAuthenticated: null,
   verify: {
@@ -42,20 +40,20 @@ const authSlice = createSlice({
     signUpSuccess: (state, action) => {
       state.isAuthenticated = false;
       state.signup.response = action.payload;
-      state.signup.error = null
+      state.signup.error = null;
     },
     signUpFail: (state, action) => {
       state.isAuthenticated = false;
-      state.signup.error = action.payload
+      state.signup.error = action.payload;
       state.signup.response = null;
     },
     authenticatedSuccess: (state) => {
       state.isAuthenticated = true;
-      state.verify.error = null
+      state.verify.error = null;
     },
     authenticatedFail: (state, action) => {
       state.isAuthenticated = false;
-      state.verify.error = action.payload
+      state.verify.error = action.payload;
     },
     logoutPerform: (state) => {
       localStorage.removeItem("access");
@@ -63,6 +61,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.login.access = null;
       state.login.refresh = null;
+    },
+    passwordResetSuccess: (state, action) => {
+      console.log("password reset link sent");
+    },
+    passwordResetFail: (state, action) => {
+      console.log("Error accured while reseting password");
     },
   },
 });
@@ -75,6 +79,8 @@ export const {
   authenticatedSuccess,
   authenticatedFail,
   logoutPerform,
+  passwordResetSuccess,
+  passwordResetFail,
 } = authSlice.actions;
 
 export default authSlice.reducer;

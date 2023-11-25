@@ -20,7 +20,7 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const initialValues = {
   email: "",
@@ -38,7 +38,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
-
   const handleFacebookLogin = () => {
     // Implement Facebook login functionality
     console.log("facebook login");
@@ -48,10 +47,10 @@ const Login = () => {
     // Implement Google login functionality
     console.log("google login");
   };
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     // Implement Google login functionality
     if (values) {
-      dispatch(login(values));
+      await dispatch(login(values));
       setSubmitting(false);
     }
   };
@@ -139,6 +138,11 @@ const Login = () => {
                   We will never share your info!
                   <br />
                   🤐
+                  <br />
+                  Fogot password?{" "}
+                  <Link to="/password-reset" style={{ color: "blue" }}>
+                    Reset Password
+                  </Link>
                 </FormHelperText>
               </FormControl>
             </Form>
