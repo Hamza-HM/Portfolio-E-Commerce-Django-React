@@ -7,19 +7,27 @@ import {
   useColorMode,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
+  Text,
 } from "@chakra-ui/react";
-import { Field, Formik, Form, ErrorMessage } from "formik";
+import { Field, Formik, Form } from "formik";
 import { passwordReset } from "../../actions/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
 const PasswordReset = () => {
   const { colorMode } = useColorMode();
+  const navigate = useNavigate();
+  const { isAuthenticated, success, error } = useSelector(
+    (state) => state?.auth
+  );
+
   const dispatch = useDispatch();
   const initialValues = {
     email: "",
   };
 
-  const validationSchemas = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email")
       .required("Email field is required"),
@@ -27,11 +35,17 @@ const PasswordReset = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     if (values) {
-      console.log(values);
       await dispatch(passwordReset(values));
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <Center h="70vh">
       <Box
@@ -40,9 +54,25 @@ const PasswordReset = () => {
         py="5"
         className={colorMode === "light" ? "mdx-prose" : ""}
       >
+        {error && typeof error === "object" ? (
+          Object.values(error).map((errorItem, index) => (
+            <Text key={index} textAlign="center" color="red" my="5">
+              {errorItem}
+            </Text>
+          ))
+        ) : (
+          <Text textAlign="center" color="red" my="5">
+            {error}
+          </Text>
+        )}
+        {success && (
+          <Text textAlign="center" color="green" my="5">
+            {success}
+          </Text>
+        )}
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchemas}
+          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
@@ -56,12 +86,14 @@ const PasswordReset = () => {
                     <Input
                       {...field}
                       type="text"
-                      area-aria-label="Email"
+                      aria-label="Email"
                       placeholder="Email"
                     />
+                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
+
               <Button type="submit" isLoading={isSubmitting} w="full">
                 Reset Password
               </Button>

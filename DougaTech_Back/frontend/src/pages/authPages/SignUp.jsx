@@ -27,11 +27,13 @@ const SignUp = () => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {isAuthenticated, signup} = useSelector((state) => state.auth);
+  const { isAuthenticated, success, error } = useSelector(
+    (state) => state.auth
+  );
   const initialValues = {
     // first_name: "",
     // last_name: "",
-    username: '',
+    username: "",
     email: "",
     password: "",
     re_password: "",
@@ -54,7 +56,7 @@ const SignUp = () => {
     if (values) {
       await dispatch(register(values));
       setSubmitting(false);
-      if (signup.response?.id) {
+      if (success?.id) {
         resetForm();
       }
     }
@@ -91,11 +93,21 @@ const SignUp = () => {
         >
           {({ isSubmitting }) => (
             <Form>
-              {signup.error && (
-                <Text textAlign='center' color="red" my='5'>{signup.error.email}</Text>
+              {error && typeof error === "object" ? (
+                Object.values(error).map((errorItem, index) => (
+                  <Text key={index} textAlign="center" color="red" my="5">
+                    {errorItem}
+                  </Text>
+                ))
+              ) : (
+                <Text textAlign="center" color="red" my="5">
+                  {error}
+                </Text>
               )}
-              {signup.response?.id && (
-                <Text textAlign='center' color="green" my='5'>Success!</Text>
+              {success?.id && (
+                <Text textAlign="center" color="green" my="5">
+                  Success!
+                </Text>
               )}
               <Field name="username">
                 {({ field, form }) => (
@@ -120,7 +132,7 @@ const SignUp = () => {
                   </FormControl>
                 )}
               </Field>
-{/* 
+              {/* 
               <Field name="last_name">
                 {({ field, form }) => (
                   <FormControl

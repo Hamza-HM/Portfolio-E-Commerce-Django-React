@@ -10,6 +10,8 @@ import AuthForm from "./pages/authPages/AuthForm";
 import Card from "./layouts/Card";
 import List from "./layouts/List";
 import PasswordReset from "./pages/authPages/PasswordReset";
+import Activate from "./pages/authPages/Activate";
+import PasswordResetConfirm from "./pages/authPages/PasswordResetConfirm";
 
 const App = () => {
   return (
@@ -20,7 +22,9 @@ const App = () => {
             <Route exact path="/" element={<Home />} />
             <Route exact path="/signup" element={<SignUp />} />
             <Route exact path="/login" element={<Login />} />
+            <Route exact path="/activate/:uid/:token" element={<Activate />} />
             <Route exact path="/password-reset" element={<PasswordReset />} />
+            <Route exact path="/password/reset/confirm/:uid/:token" element={<PasswordResetConfirm />} />
             <Route exact path="/authenticate" element={<AuthForm />} />
             <Route exact path="/card" element={<Card />} />
             <Route exact path="/list" element={<List />} />

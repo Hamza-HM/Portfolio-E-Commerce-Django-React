@@ -37,7 +37,17 @@ const Login = () => {
   const { colorMode } = useColorMode();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+  const { isAuthenticated, error, success } = useSelector(
+    (state) => state?.auth
+  );
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    // Implement Google login functionality
+    if (values) {
+      await dispatch(login(values));
+      setSubmitting(false);
+    }
+  };
   const handleFacebookLogin = () => {
     // Implement Facebook login functionality
     console.log("facebook login");
@@ -46,13 +56,6 @@ const Login = () => {
   const handleGoogleLogin = () => {
     // Implement Google login functionality
     console.log("google login");
-  };
-  const handleSubmit = async (values, { setSubmitting }) => {
-    // Implement Google login functionality
-    if (values) {
-      await dispatch(login(values));
-      setSubmitting(false);
-    }
   };
 
   useEffect(() => {
@@ -76,6 +79,17 @@ const Login = () => {
         >
           {({ isSubmitting }) => (
             <Form>
+              {error && typeof error === "object" ? (
+                Object.values(error).map((errorItem, index) => (
+                  <Text key={index} textAlign="center" color="red" my="5">
+                    {errorItem}
+                  </Text>
+                ))
+              ) : (
+                <Text textAlign="center" color="red" my="5">
+                  {error}
+                </Text>
+              )}
               <Field name="email">
                 {({ field, form }) => (
                   <FormControl

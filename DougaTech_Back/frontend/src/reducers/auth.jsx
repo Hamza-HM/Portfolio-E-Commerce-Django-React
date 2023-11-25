@@ -1,15 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  login: {
-    access: localStorage.getItem("access"),
-    refresh: localStorage.getItem("refresh"),
-    error: null,
-  },
-  signup: {
-    response: null,
-    error: null,
-  },
+  access: localStorage.getItem("access"),
+  refresh: localStorage.getItem("refresh"),
+  error: null,
   isAuthenticated: null,
   verify: {
     error: null,
@@ -27,25 +21,28 @@ const authSlice = createSlice({
       localStorage.setItem("refresh", refresh);
 
       state.isAuthenticated = true;
-      state.login.access = access;
-      state.login.refresh = refresh;
-      state.login.error = null; // Reset any previous errors on successful login
+      state.access = access;
+      state.refresh = refresh;
+      state.error = null; // Reset any previous errors on successful
     },
     loginFail: (state, action) => {
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
       state.isAuthenticated = false;
-      state.login.access = null;
-      state.login.refresh = null;
-      state.login.error = action.payload; // Set the error message from the action payload
+      state.access = null;
+      state.refresh = null;
+      state.error = action.payload; // Set the error message from the action payload
     },
     signUpSuccess: (state, action) => {
       state.isAuthenticated = false;
-      state.signup.response = action.payload;
-      state.signup.error = null;
+      state.success = action.payload;
+      state.error = null;
     },
     signUpFail: (state, action) => {
       state.isAuthenticated = false;
-      state.signup.error = action.payload;
-      state.signup.response = null;
+      state.error = action.payload;
+      console.log(state.error);
+      state.success = null;
     },
     authenticatedSuccess: (state) => {
       state.isAuthenticated = true;
@@ -59,14 +56,34 @@ const authSlice = createSlice({
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
       state.isAuthenticated = false;
-      state.login.access = null;
-      state.login.refresh = null;
+      state.access = null;
+      state.refresh = null;
+      state.error = null;
     },
-    passwordResetSuccess: (state, action) => {
-      console.log("password reset link sent");
+    accountActivationSuccess: (state) => {
+      state.error = null;
+      state.success = "Account activated!";
+    },
+    accountActivationFail: (state, action) => {
+      state.success = null;
+      state.error = action.payload;
+    },
+    passwordResetSuccess: (state) => {
+      state.success =
+        "if you have an account your will receive a password reset email!";
+      state.error = null;
     },
     passwordResetFail: (state, action) => {
-      console.log("Error accured while reseting password");
+      state.success = null;
+      state.error = action.payload;
+    },
+    passwordResetConfirmSuccess: (state) => {
+      state.success = "Password changed!";
+      state.error = null;
+    },
+    passwordResetConfirmFail: (state, action) => {
+      state.success = null;
+      state.error = action.payload;
     },
   },
 });
@@ -79,8 +96,16 @@ export const {
   authenticatedSuccess,
   authenticatedFail,
   logoutPerform,
+  accountActivationSuccess,
+  accountActivationFail,
   passwordResetSuccess,
   passwordResetFail,
+  passwordResetConfirmSuccess,
+  passwordResetConfirmFail,
+  googleAuthSuccess,
+  googleAuthFail,
+  facebookAuthSuccess,
+  facebookAuthFail,
 } = authSlice.actions;
 
 export default authSlice.reducer;

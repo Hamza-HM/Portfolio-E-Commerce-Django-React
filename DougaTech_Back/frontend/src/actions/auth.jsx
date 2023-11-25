@@ -8,9 +8,13 @@ import {
   signUpFail,
   authenticatedSuccess,
   authenticatedFail,
+  accountActivationSuccess,
+  accountActivationFail,
   logoutPerform,
   passwordResetSuccess,
   passwordResetFail,
+  passwordResetConfirmSuccess,
+  passwordResetConfirmFail,
 } from "../reducers/auth";
 
 export const login = createAsyncThunk(
@@ -34,9 +38,8 @@ export const login = createAsyncThunk(
         config
       );
       dispatch(loginSuccess(res.data));
-      console.log(res.data);
     } catch (err) {
-      dispatch(loginFail(err));
+      dispatch(loginFail(err.response.data));
     }
   }
 );
@@ -85,6 +88,26 @@ export const register = createAsyncThunk(
   }
 );
 
+export const activate = createAsyncThunk(
+  "auth/activate",
+  async (values, { dispatch }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+    };
+    const body = values;
+    try {
+      await axios.post(import.meta.env.VITE_ACCOUNT_ACTIVATE_URL, body, config);
+      dispatch(accountActivationSuccess());
+    } catch (err) {
+      console.log(err.response.data);
+      dispatch(accountActivationFail(err.response.data));
+    }
+  }
+);
+
 export const checkAuthenticated = createAsyncThunk(
   "auth/checkAuthenticated",
   async (_, { dispatch }) => {
@@ -120,25 +143,129 @@ export const checkAuthenticated = createAsyncThunk(
   }
 );
 
-export const passwordReset = createAsyncThunk("auth/password_reset");
-async ({ email }, { dispatch }) => {
-  const config = {
-    "Content-Type": "application/json",
-    accept: "application/json",
-    "X-CSRFToken": getCookie("csrftoken"),
-  };
-  const body = {
-    email: email,
-  };
-  console.log(body);
-  try {
-    await axios.post(import.meta.env.VITE_PASSWORD_RESET_URL, body, config);
-    dispatch(passwordResetSuccess());
-  } catch (err) {
-    dispatch(passwordResetFail(err));
+export const passwordReset = createAsyncThunk(
+  "auth/passwordReset",
+  async ({ email }, { dispatch }) => {
+    const config = {
+      "Content-Type": "application/json",
+      accept: "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    };
+    const body = {
+      email: email,
+    };
+    try {
+      const res = await axios.post(
+        import.meta.env.VITE_PASSWORD_RESET_URL,
+        body,
+        config
+      );
+      console.log(res.data);
+      dispatch(passwordResetSuccess());
+    } catch (err) {
+      dispatch(passwordResetFail(err.response.data));
+    }
   }
-};
+);
+export const resetPasswordConfirmation = createAsyncThunk(
+  "auth/passwordResetConfirm",
+  async ({ uid, token, password, re_password }, { dispatch }) => {
+    const config = {
+      "Content-Type": "application/json",
+      accept: "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    };
+    const body = {
+      uid,
+      token,
+      new_password: password,
+      re_new_password: re_password,
+    };
+    console.log(body);
+    try {
+      await axios.post(
+        import.meta.env.VITE_PASSWORD_RESET_CONFIRM_URL,
+        body,
+        config
+      );
+      dispatch(passwordResetConfirmSuccess());
+    } catch (err) {
+      dispatch(passwordResetConfirmFail(err.response.data));
+    }
+  }
+);
 
+export const facebookAuth = createAsyncThunk(
+  "auth/facebookAuth",
+  async ({ state, code }, { dispatch }) => {
+    if (state && code && !localStorage.getItem("access")) {
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      };
+      const details = {
+        state: state,
+        code: code,
+      };
+      const formBody = Object.keys(details)
+        .map(
+          (key) =>
+            encodeURIComponent(key) + "=" + encodeURIComponent(details[key])
+        )
+        .join("&");
+
+      try {
+        const response = await axios.post(
+          `
+      ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/facebook/?${formBody}`,
+          config
+        );
+        console.log(response.data);
+        dispatch(loginSuccess(response.data));
+        // dispatch(load_user())
+      } catch (error) {
+        dispatch(loginFail());
+        // dispatch(userLoadedFail())
+      }
+    } else {
+      dispatch(loginFail("Account login error!"));
+    }
+  }
+);
+
+export const googleAuth = createAsyncThunk(
+  'auth/googleAuth',
+  async ({state, code}, {dispatch}) => {
+    if (state && code && !localStorage.getItem("access")) {
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie("csrftoken"),
+
+        },
+      };
+      const details = {
+        "state" : state,
+        "code" : code
+      };
+      const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+
+      try {
+      const response = await axios.post(`
+      ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/google-oauth2/?${formBody}`, config)
+      console.log(response.data)
+      dispatch(loginSuccess(response.data))
+      // dispatch(load_user())
+      } catch (error) {
+        console.log(error);
+        dispatch(loginFail());
+        // dispatch(userLoadedFail());
+      }
+    }
+}
+)
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { dispatch }) => {
