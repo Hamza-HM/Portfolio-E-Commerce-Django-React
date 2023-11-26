@@ -31,11 +31,11 @@ class AddressSerializer(serializers.ModelSerializer):
     country = CountryField()
     class Meta:
         model = Address
-        fields = [
-            'id',
-            'street_address',
-            'country',
-            'zip',
-            'address_type',
-            'default_addr'
-        ]
+        fields = (
+            "id",
+            "street_address",
+            "country",
+            "zip",
+            "address_type",
+            "default_addr",
+        )

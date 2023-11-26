@@ -4,7 +4,11 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.generics import (
+    CreateAPIView,
+    UpdateAPIView
+    
+    )
 from rest_framework.mixins import (
                                 RetrieveModelMixin,
                                 ListModelMixin,
@@ -41,6 +45,7 @@ class AddressControlViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin
 class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = AddressSerializer
     permission_classes = [IsAuthenticated]
+    queryset = Address.objects.all()
 
     def get_object(self):
         user = self.request.user
@@ -60,10 +65,25 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         if address_type is not None:
             try:
                 Address.objects.get(user=user, address_type=address_type)
-                return Response({'detail': 'Address type already exists'}, status=status.HTTP_200_OK)
+                return Response({'detail': 'Address type already exists'}, status.HTTP_400_BAD_REQUEST)
             except Address.DoesNotExist:
                 return super().create(request, *args, **kwargs)
         return Response({'detail': 'Address type not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        # Response(serializer.data, status.HTTP_201_CREATED)
+
+
+class AddressUpdateView(UpdateAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = AddressSerializer
+    queryset = Address.objects.all()
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        response_data = [serializer.data]
+        return Response(response_data, status=HTTP_200_OK)

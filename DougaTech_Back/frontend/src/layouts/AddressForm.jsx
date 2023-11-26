@@ -14,10 +14,11 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { create_address } from "../actions/profile";
+import { create_address, update_address } from "../actions/profile";
 // import { create_address, update_address } from '[your_action_path]'; // Update with your action path
 
-const UPDATE_FORM = "UPDATE"; // Define your update form type if needed
+const UPDATE_FORM = "UPDATE_FORM";
+const CREATE_FORM = "CREATE_FORM"; // Define your update form type if needed
 
 const AddressForm = ({
   formType,
@@ -32,7 +33,7 @@ const AddressForm = ({
 
   const initialValues = {
     street_address: "",
-    apartment_address: "",
+    // apartment_address: "",
     country: "",
     zip: "",
     default_addr: false,
@@ -40,36 +41,33 @@ const AddressForm = ({
 
   const validationSchema = Yup.object().shape({
     street_address: Yup.string().required("Street Address is required"),
-    apartment_address: Yup.string().required("Apartment Address is required"),
+    // apartment_address: Yup.string().required("Apartment Address is required"),
     country: Yup.string().required("Country is required"),
     zip: Yup.string().required("Zip Code is required"),
   });
 
-  const handleToggle = (e) => {
-    console.log(e.target.checked);
-  };
-
   const handleCreateAddress = async (values, { setSubmitting }) => {
-      activeItem = 'Billing Address'
-      if (values && activeItem) {
-          const address_type = activeItem === "Billing Address" ? "B" : "S";
-      // dispatch(updateAddress(
-      //     values.street_address,
-      //     values.apartment_address,
-      //     values.country,
-      //     values.zip,
-      //     values.default_addr,
-      //     values.id,
-      //     address_type,
-      // ))
-      dispatch(create_address({
-        ...values,
-        address_type,
-
+    if (values && activeItem) {
+      const address_type = activeItem === "Billing Address" ? "B" : "S";
+      console.log(values);
+      if (formType === UPDATE_FORM) {
+        console.log("hello");
+        dispatch(
+          update_address({
+            ...values,
+            address_type,
+          })
+        );
+      } else {
+        dispatch(
+          create_address({
+            ...values,
+            address_type,
+          })
+        );
       }
-      ))
-  }
-}
+    }
+  };
 
   //   const handleFormatCountries = (countries) => {
   //     const keys = Object.keys(countries);
@@ -115,7 +113,7 @@ const AddressForm = ({
                   </FormControl>
                 )}
               </Field>
-
+              {/* 
               <Field name="apartment_address">
                 {({ field, form }) => (
                   <FormControl
@@ -132,7 +130,7 @@ const AddressForm = ({
                     </FormErrorMessage>
                   </FormControl>
                 )}
-              </Field>
+              </Field> */}
 
               <Field name="country">
                 {({ field, form }) => (
@@ -167,13 +165,9 @@ const AddressForm = ({
               </Field>
               <Field name="default_addr">
                 {({ field }) => (
-                    <Checkbox
-                      {...field}
-                      name="default_addr"
-                      mt="5"
-                    >
-                      Make this the default address
-                    </Checkbox>
+                  <Checkbox {...field} name="default_addr" mt="5">
+                    Make this the default address
+                  </Checkbox>
                 )}
               </Field>
 

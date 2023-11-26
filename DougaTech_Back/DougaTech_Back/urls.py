@@ -28,7 +28,7 @@ urlpatterns = [
     path('api/users/', include('users.urls')),
     path('api/products/', include('products.api.urls')),
     path('crsf-token/', get_csrf_token, name='csrf-token'),
-    re_path(r"^/.*", index, name="api-index")
+    re_path(r"^.*", index, name="api-index")
 
   # others
 ]
