@@ -1,9 +1,9 @@
-
+import Hero from '../../layouts/Hero'
 
 const Home = () => {
     return (
         <>
-        home!
+        <Hero />
         </>
     )
 }

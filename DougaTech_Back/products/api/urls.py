@@ -10,6 +10,7 @@ urlpatterns = [
     path('update-quantity/', views.OrderQuantityUpdateView.as_view(), name='update-quantity'),
     path('order-summary/', views.OrderDetailView.as_view(), name='order-summary'),
     path('order-items/<int:pk>/delete/', views.OrderItemDeleteView.as_view(), name='del-order-item'),
-    path('payment/', views.PaymentView.as_view(), name='payment')
+    path('payment/', views.PaymentView.as_view(), name='payment'),
+    path('countries/', views.CountryListView.as_view(), name='country-list')
 
 ]

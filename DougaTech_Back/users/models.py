@@ -11,23 +11,23 @@ from .managers import UserManager
 
 class User(AbstractUser):
     email = EmailField(_("Email Address"), unique=True)
+    first_name = CharField(_("First Name"), max_length=100, blank=True)
+    last_name = CharField(_("Last Name"), max_length=100, blank=True)
     is_active = models.BooleanField(_("Active"), default=True)
     is_staff = models.BooleanField(_("Staff"), default=False)
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['first_name','last_name']
 
     objects = UserManager()
 
     def get_full_name(self):
-        return str(self.email)
+        return str(self.first_name + self.last_name)
 
     def __str__(self):
         return str(self.email)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    first_name = CharField(_("First Name"), max_length=100, blank=True)
-    last_name = CharField(_("Last Name"), max_length=100, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     shipping_address = models.TextField(blank=True)
     billing_address = models.TextField(blank=True)

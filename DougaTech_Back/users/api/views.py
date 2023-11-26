@@ -59,7 +59,7 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
         address_type = request.data.get('address_type')
         if address_type is not None:
             try:
-                address = Address.objects.get(user=user, address_type=address_type)
+                Address.objects.get(user=user, address_type=address_type)
                 return Response({'detail': 'Address type already exists'}, status=status.HTTP_200_OK)
             except Address.DoesNotExist:
                 return super().create(request, *args, **kwargs)

@@ -26,7 +26,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return str(obj.user.email)
     def get_username(self, obj):
         return str(obj.user.username)
-    
+
 class AddressSerializer(serializers.ModelSerializer):
     country = CountryField()
     class Meta:

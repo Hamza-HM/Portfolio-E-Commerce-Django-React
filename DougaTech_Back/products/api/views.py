@@ -237,30 +237,30 @@ class PaymentView(APIView):
           order.shipping_address = shipping_address.first()
           order.save()
 
-          return Response({"message": "Your order was successful!"}, status=HTTP_200_OK)
+          return Response({"message": "Your order was successful!"}, status.HTTP_200_OK)
 
       except stripe.error.CardError as e:
           body = e.json_body
           err = body.get('error', {})
-          return Response({"message": f"{err.get('message')}"}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": f"{err.get('message')}"}, status.HTTP_400_BAD_REQUEST)
 
       except stripe.error.RateLimitError as e:
-          return Response({"message": "Rate limit error"}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": "Rate limit error"}, status.HTTP_400_BAD_REQUEST)
 
       except stripe.error.InvalidRequestError as e:
-          return Response({"message": "Invalid parameters"}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": "Invalid parameters"}, status.HTTP_400_BAD_REQUEST)
 
       except stripe.error.AuthenticationError as e:
-          return Response({"message": "Not authenticated"}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": "Not authenticated"}, status.HTTP_400_BAD_REQUEST)
 
       except stripe.error.APIConnectionError as e:
-          return Response({"message": "Network error"}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": "Network error"}, status.HTTP_400_BAD_REQUEST)
 
       except stripe.error.StripeError as e:
-          return Response({"message": "Something went wrong. You were not charged. Please try again."}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": "Something went wrong. You were not charged. Please try again."}, status.HTTP_400_BAD_REQUEST)
 
       except Exception as e:
-          return Response({"message": "A serious error occurred. We have been notified."}, status=HTTP_400_BAD_REQUEST)
+          return Response({"message": "A serious error occurred. We have been notified."}, status.HTTP_400_BAD_REQUEST)
 
 
 class AddCouponView(APIView):
@@ -277,3 +277,6 @@ class AddCouponView(APIView):
         except ObjectDoesNotExist:
             return Response({'detail': 'Invalid data'}, status.HTTP_404_NOT_FOUND)
 
+class CountryListView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response(countries, status.HTTP_200_OK)

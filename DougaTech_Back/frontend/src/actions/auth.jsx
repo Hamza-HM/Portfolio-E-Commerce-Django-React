@@ -250,6 +250,7 @@ export const googleAuth = createAsyncThunk(
         "state" : state,
         "code" : code
       };
+      console.log(details)
       const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
 
       try {

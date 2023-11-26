@@ -23,11 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #users
     re_path(r'^auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.social.urls')),
     path('', include('djoser.urls.jwt')),
     path('api/users/', include('users.urls')),
     path('api/products/', include('products.api.urls')),
-   #  path('crsf-token/', get_csrf_token, name='csrf-token'),
-    re_path(r"^.*", index, name="api-index")
+    path('crsf-token/', get_csrf_token, name='csrf-token'),
+    re_path(r"^/.*", index, name="api-index")
 
   # others
 ]

@@ -48,8 +48,9 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'corsheaders',
     'djoser',
+    'corsheaders',
+    'social_django',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',

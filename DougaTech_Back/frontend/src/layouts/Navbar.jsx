@@ -24,13 +24,16 @@ import {
   SunIcon,
 } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/auth";
 
 const links = [
   { name: "Card", link: "/card" },
   { name: "List", link: "/list" },
   // { name: "Authenticate", link: "/authenticate" },
+];
+
+const authLinks = [
   { name: "Login", link: "/login" },
   { name: "Signup", link: "/signup" },
 ];
@@ -53,9 +56,10 @@ const NavLink = (props) => {
   );
 };
 
-export default function WithAction() {
+const WithAction = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isAuthenticated } = useSelector((state) => state?.auth);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -72,7 +76,11 @@ export default function WithAction() {
             display={{ md: "none" }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <Box>Logo</Box>
+          <Box>
+            <Link to="/" aria-label="Home">
+              Logo
+            </Link>
+          </Box>
           <HStack spacing={8} alignItems={"center"}>
             <HStack
               as={"nav"}
@@ -85,42 +93,37 @@ export default function WithAction() {
                   {link.name}
                 </NavLink>
               ))}
+              <IconButton
+                display={"flex"}
+                rounded="full"
+                onClick={toggleColorMode}
+                aria-label="Toggle color mode"
+                icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+              />
             </HStack>
           </HStack>
-          {/* <Flex alignItems={'center'}>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rounded={'full'}
-              variant={'link'}
-              cursor={'pointer'}
-              minW={0}
-            >
-              <Avatar
-                size={'sm'}
-                src={'https://via.placeholder.com/150'}
-              />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>Link 1</MenuItem>
-              <MenuItem>Link 2</MenuItem>
-              <MenuDivider />
-              <MenuItem>Link 3</MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex> */}
-          <Box>
-            <IconButton
-              display={"flex"}
-              rounded="full"
-              onClick={toggleColorMode}
-              aria-label="Toggle color mode"
-              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            />
-          </Box>
-          <Link to="/" onClick={handleLogout} aria-label="Toggle color mode">
-            Logout
-          </Link>
+          <HStack>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/"
+                  onClick={handleLogout}
+                  aria-label="Toggle color mode"
+                >
+                  Logout
+                </Link>
+                <Link to="/profile" aria-label="Profile">
+                  Profile
+                </Link>
+              </>
+            ) : (
+              authLinks.map((link) => (
+                <NavLink key={link.name} path={link.link}>
+                  {link.name}
+                </NavLink>
+              ))
+            )}
+          </HStack>
         </Flex>
 
         {isOpen ? (
@@ -132,10 +135,28 @@ export default function WithAction() {
                   {link.name}
                 </NavLink>
               ))}
+
+              {isAuthenticated ? (
+                <Link
+                  to="/"
+                  onClick={handleLogout}
+                  aria-label="Toggle color mode"
+                >
+                  Logout
+                </Link>
+              ) : (
+                authLinks.map((link) => (
+                  <NavLink key={link.name} path={link.link}>
+                    {link.name}
+                  </NavLink>
+                ))
+              )}
             </Stack>
           </Box>
         ) : null}
       </Box>
     </>
   );
-}
+};
+
+export default WithAction;
