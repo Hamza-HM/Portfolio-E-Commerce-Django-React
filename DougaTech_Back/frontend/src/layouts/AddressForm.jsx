@@ -9,13 +9,11 @@ import {
   FormLabel,
   Input,
   Select,
-  Stack,
-  Text,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { create_address, delete_address, update_address } from "../actions/profile";
+import { create_address, delete_address, load_addresses, update_address } from "../actions/profile";
 // import { create_address, update_address } from '[your_action_path]'; // Update with your action path
 
 const UPDATE_FORM = "UPDATE_FORM";
@@ -31,6 +29,8 @@ const AddressForm = ({
   const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
   const countryList = useSelector((state) => state.profile?.countries) || [];
+  const [deleteLoading, setDeleteLoading] = useState(false);
+      const [address_type, SetAddress_type] = useState(activeItem === "Billing Address" ? "B" : "S")
   const initialValues = {
     street_address: "",
     country: "",
@@ -48,7 +48,6 @@ const AddressForm = ({
 
   const handleCreateAddress = async (values, { setSubmitting }) => {
     if (values && activeItem) {
-      const address_type = activeItem === "Billing Address" ? "B" : "S";
       // console.log(address_type, values)
       if (formType === UPDATE_FORM) {
         await dispatch(
@@ -70,9 +69,11 @@ const AddressForm = ({
     }
   };
 
-  const handleDeleteAddress = () => {
+  const handleDeleteAddress = async () => {
     if (selectedAddress) {
-      dispatch(delete_address(selectedAddress))
+      setDeleteLoading(true);
+      await dispatch(delete_address(selectedAddress));
+      setDeleteLoading(false);
     }
   }
 
@@ -81,6 +82,10 @@ const AddressForm = ({
       setCountries(countryList.data);
     }
   }, [countryList.data]);
+useEffect(() => {
+console.log(selectedAddress, 'from form')
+}, [selectedAddress])
+
 
   return (
     <Center>
@@ -91,7 +96,7 @@ const AddressForm = ({
           onSubmit={handleCreateAddress}
           enableReinitialize
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, resetForm }) => (
             <Form>
               <Field name="street_address">
                 {({ field, form }) => (
@@ -154,6 +159,7 @@ const AddressForm = ({
                 colorScheme="blue"
                 w="full"
                 mt={4}
+                loadingText={formType === UPDATE_FORM ? "Updating" : "Creating"}
               >
                 {formType === UPDATE_FORM ? "Update" : "Create"}
               </Button>
@@ -162,6 +168,8 @@ const AddressForm = ({
                 colorScheme="blue"
                 w="full"
                 mt={4}
+                isLoading={deleteLoading}
+                loadingText='Deleting'
               >
                 Delete
               </Button>

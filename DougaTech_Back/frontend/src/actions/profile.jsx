@@ -102,7 +102,7 @@ export const create_address = createAsyncThunk(
           config
         );
         dispatch(addressCreateSuccess(res.data));
-        // dispatch(load_addresses("S"));
+        dispatch(load_addresses({addrType: ''}));
       } catch (err) {
         dispatch(addressCreateFail(err.response.data));
       }
@@ -141,7 +141,7 @@ export const update_address = createAsyncThunk(
           config
         );
         dispatch(addressUpdateSuccess(response.data));
-        // dispatch(load_addresses(address_type));
+        dispatch(load_addresses({addrType: ''}));
       } catch (err) {
         dispatch(addressUpdateFail(err));
       }
@@ -178,7 +178,7 @@ export const delete_address = createAsyncThunk(
         });
 
         dispatch(addressDeleteSuccess(response.data));
-        dispatch(load_addresses(address_type));
+        dispatch(load_addresses({addrType: ''}));
       } catch (err) {
         dispatch(addressDeleteFail(err));
       }
