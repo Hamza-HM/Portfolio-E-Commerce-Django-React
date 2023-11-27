@@ -45,20 +45,18 @@ class AddressControlViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin
 class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = AddressSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Address.objects.all()
 
     def get_object(self):
         user = self.request.user
-        address_type = self.request.data.get('address_type', None)
-
+        address_type = self.request.query_params.get('address_type', None)
         if address_type is not None:
             try:
                 address = Address.objects.get(user=user, address_type=address_type)
                 return address
             except Address.DoesNotExist:
-                return Response({'detail': 'Address does not exist for this user and type.'}, status=status.HTTP_404_NOT_FOUND)
+                return None
         else:
-            return Response({'detail': 'Address type not provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return None
     def create(self, request, *args, **kwargs):
         user = request.user
         address_type = request.data.get('address_type')
@@ -73,17 +71,3 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         # Response(serializer.data, status.HTTP_201_CREATED)
-
-
-class AddressUpdateView(UpdateAPIView):
-    permission_classes = (IsAuthenticated, )
-    serializer_class = AddressSerializer
-    queryset = Address.objects.all()
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        response_data = [serializer.data]
-        return Response(response_data, status=HTTP_200_OK)

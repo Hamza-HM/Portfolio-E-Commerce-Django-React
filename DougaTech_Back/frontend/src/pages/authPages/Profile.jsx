@@ -24,7 +24,7 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch(load_countries());
-    // dispatch(load_addresses("B"));
+    dispatch(load_addresses({ addrType: "B" }));
   }, []);
 
   return (

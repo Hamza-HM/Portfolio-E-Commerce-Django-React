@@ -49,23 +49,23 @@ const AddressForm = ({
   const handleCreateAddress = async (values, { setSubmitting }) => {
     if (values && activeItem) {
       const address_type = activeItem === "Billing Address" ? "B" : "S";
-      console.log(values);
       if (formType === UPDATE_FORM) {
-        console.log("hello");
-        dispatch(
+        await dispatch(
           update_address({
             ...values,
             address_type,
           })
         );
+        setSubmitting(false);
       } else {
-        dispatch(
+        await dispatch(
           create_address({
             ...values,
             address_type,
           })
         );
       }
+      setSubmitting(false);
     }
   };
 

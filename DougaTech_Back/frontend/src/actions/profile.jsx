@@ -49,7 +49,7 @@ export const load_user = createAsyncThunk(
 
 export const load_addresses = createAsyncThunk(
   "auth/load_addresses",
-  async (addrType, { dispatch }) => {
+  async ({ addrType }, { dispatch }) => {
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
@@ -58,17 +58,16 @@ export const load_addresses = createAsyncThunk(
           "X-CSRFToken": getCookie("csrftoken"),
         },
       };
+      const body = {
+        addrType,
+      };
       try {
-        const response = addrType
-          ? await axios.get(
-              `${
-                import.meta.env.VITE_API_ADDRESS_URL
-              }?address_type=${addrType}`,
-              config
-            )
-          : await axios.get(`${import.meta.env.VITE_API_ADDRESS_URL}`, config);
-
-        dispatch(addressLoadedSuccess(response.data));
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_ADDRESS_URL}?address_type=${addrType}`,
+          config
+        );
+        console.log(res.data);
+        dispatch(addressLoadedSuccess(res.data));
       } catch (err) {
         dispatch(addressLoadedFail(err));
       }

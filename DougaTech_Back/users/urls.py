@@ -8,5 +8,4 @@ urlpatterns = [
     path('addresses', views.AddressControlViewSet.as_view({'get': 'list'}), name='Address-list'),
     path('addresses/<int:pk>', views.AddressControlViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='Address-controle'),
     path('address/', views.AddressUserViewset.as_view({'get': 'retrieve', 'post': 'create', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='Address-detail'),
-    path('address/update/', views.AddressUpdateView.as_view(), name='Address-update'),
 ]
