@@ -7,5 +7,5 @@ urlpatterns = [
     path('profile/', views.UserProfileViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'}), name='profile-detail'),
     path('addresses', views.AddressControlViewSet.as_view({'get': 'list'}), name='Address-list'),
     path('addresses/<int:pk>', views.AddressControlViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='Address-controle'),
-    path('address/', views.AddressUserViewset.as_view({'get': 'retrieve', 'post': 'create', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='Address-detail'),
+    path('address/', views.AddressUserViewset.as_view({'get': 'list', 'post': 'create', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='Address-detail'),
 ]

@@ -58,15 +58,11 @@ export const load_addresses = createAsyncThunk(
           "X-CSRFToken": getCookie("csrftoken"),
         },
       };
-      const body = {
-        addrType,
-      };
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_ADDRESS_URL}?address_type=${addrType}`,
           config
         );
-        console.log(res.data);
         dispatch(addressLoadedSuccess(res.data));
       } catch (err) {
         dispatch(addressLoadedFail(err));
@@ -106,7 +102,7 @@ export const create_address = createAsyncThunk(
           config
         );
         dispatch(addressCreateSuccess(res.data));
-        // dispatch(load_addresses("S"));
+        dispatch(load_addresses({addrType: ''}));
       } catch (err) {
         dispatch(addressCreateFail(err.response.data));
       }
@@ -145,7 +141,7 @@ export const update_address = createAsyncThunk(
           config
         );
         dispatch(addressUpdateSuccess(response.data));
-        // dispatch(load_addresses(address_type));
+        dispatch(load_addresses({addrType: ''}));
       } catch (err) {
         dispatch(addressUpdateFail(err));
       }
@@ -158,36 +154,31 @@ export const update_address = createAsyncThunk(
 export const delete_address = createAsyncThunk(
   "auth/delete_address",
   async (
-    { street_address, country, zip, default_addr, address_type },
+    { address_type },
     { dispatch }
   ) => {
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
-          // 'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `JWT ${localStorage.getItem("access")}`,
           "X-CSRFToken": getCookie("csrftoken"),
         },
         withCredentials: true,
       };
       const body = {
-        street_address,
-        apartment_address,
-        country,
-        zip,
-        default_addr,
         address_type,
       };
       try {
         const response = await axios.request({
           method: "DELETE",
-          url: `${import.meta.env.VITE_API_ADDRESS_URL}/`,
+          url: `${import.meta.env.VITE_API_ADDRESS_URL}`,
           data: body,
           headers: config.headers,
         });
 
         dispatch(addressDeleteSuccess(response.data));
-        dispatch(load_addresses(address_type));
+        dispatch(load_addresses({addrType: ''}));
       } catch (err) {
         dispatch(addressDeleteFail(err));
       }

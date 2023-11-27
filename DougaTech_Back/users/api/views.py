@@ -4,6 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView
@@ -42,14 +43,30 @@ class AddressControlViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin
     permission_classes = [IsAdminUser]
     queryset = Address.objects.all()
 
-class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
+class AddressUserViewset(ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = AddressSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
+    def get_queryset(self):
         user = self.request.user
         address_type = self.request.query_params.get('address_type', None)
-        if address_type is not None:
+
+        if address_type:
+            try:
+                address = Address.objects.filter(user=user, address_type=address_type)
+                return address
+            except Address.DoesNotExist:
+                return Address.objects.none()
+        else:
+            try:
+                address = Address.objects.filter(user=user)
+                return address
+            except Address.DoesNotExist:
+                return Address.objects.none()
+    def get_object(self):
+        user = self.request.user
+        address_type = self.request.data.get('address_type', None)
+        if address_type:
             try:
                 address = Address.objects.get(user=user, address_type=address_type)
                 return address
@@ -57,6 +74,7 @@ class AddressUserViewset(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin,
                 return None
         else:
             return None
+
     def create(self, request, *args, **kwargs):
         user = request.user
         address_type = request.data.get('address_type')

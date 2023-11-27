@@ -9,12 +9,11 @@ import {
   FormLabel,
   Input,
   Select,
-  Text,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { create_address, update_address } from "../actions/profile";
+import { create_address, delete_address, load_addresses, update_address } from "../actions/profile";
 // import { create_address, update_address } from '[your_action_path]'; // Update with your action path
 
 const UPDATE_FORM = "UPDATE_FORM";
@@ -30,13 +29,14 @@ const AddressForm = ({
   const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
   const countryList = useSelector((state) => state.profile?.countries) || [];
-
+  const [deleteLoading, setDeleteLoading] = useState(false);
+      const [address_type, SetAddress_type] = useState(activeItem === "Billing Address" ? "B" : "S")
   const initialValues = {
     street_address: "",
-    // apartment_address: "",
     country: "",
     zip: "",
     default_addr: false,
+    ...selectedAddress
   };
 
   const validationSchema = Yup.object().shape({
@@ -48,7 +48,7 @@ const AddressForm = ({
 
   const handleCreateAddress = async (values, { setSubmitting }) => {
     if (values && activeItem) {
-      const address_type = activeItem === "Billing Address" ? "B" : "S";
+      // console.log(address_type, values)
       if (formType === UPDATE_FORM) {
         await dispatch(
           update_address({
@@ -69,22 +69,23 @@ const AddressForm = ({
     }
   };
 
-  //   const handleFormatCountries = (countries) => {
-  //     const keys = Object.keys(countries);
-  //     return keys.map((key) => {
-  //       return {
-  //         key: key,
-  //         text: countries[key],
-  //         value: key,
-  //       };
-  //     });
-  //   };
+  const handleDeleteAddress = async () => {
+    if (selectedAddress) {
+      setDeleteLoading(true);
+      await dispatch(delete_address(selectedAddress));
+      setDeleteLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (countryList.data) {
       setCountries(countryList.data);
     }
   }, [countryList.data]);
+useEffect(() => {
+console.log(selectedAddress, 'from form')
+}, [selectedAddress])
+
 
   return (
     <Center>
@@ -95,7 +96,7 @@ const AddressForm = ({
           onSubmit={handleCreateAddress}
           enableReinitialize
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, resetForm }) => (
             <Form>
               <Field name="street_address">
                 {({ field, form }) => (
@@ -113,25 +114,6 @@ const AddressForm = ({
                   </FormControl>
                 )}
               </Field>
-              {/* 
-              <Field name="apartment_address">
-                {({ field, form }) => (
-                  <FormControl
-                    isRequired
-                    isInvalid={
-                      form.errors.apartment_address &&
-                      form.touched.apartment_address
-                    }
-                  >
-                    <FormLabel>Apartment Address</FormLabel>
-                    <Input {...field} placeholder="Enter apartment address" />
-                    <FormErrorMessage>
-                      {form.errors.apartment_address}
-                    </FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field> */}
-
               <Field name="country">
                 {({ field, form }) => (
                   <FormControl
@@ -165,7 +147,7 @@ const AddressForm = ({
               </Field>
               <Field name="default_addr">
                 {({ field }) => (
-                  <Checkbox {...field} name="default_addr" mt="5">
+                  <Checkbox {...field} name="default_addr" mt="5" isChecked={field.value}>
                     Make this the default address
                   </Checkbox>
                 )}
@@ -177,8 +159,19 @@ const AddressForm = ({
                 colorScheme="blue"
                 w="full"
                 mt={4}
+                loadingText={formType === UPDATE_FORM ? "Updating" : "Creating"}
               >
                 {formType === UPDATE_FORM ? "Update" : "Create"}
+              </Button>
+              <Button
+                onClick={handleDeleteAddress}
+                colorScheme="blue"
+                w="full"
+                mt={4}
+                isLoading={deleteLoading}
+                loadingText='Deleting'
+              >
+                Delete
               </Button>
             </Form>
           )}
