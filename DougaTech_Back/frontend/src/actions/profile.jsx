@@ -58,15 +58,11 @@ export const load_addresses = createAsyncThunk(
           "X-CSRFToken": getCookie("csrftoken"),
         },
       };
-      const body = {
-        addrType,
-      };
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_ADDRESS_URL}?address_type=${addrType}`,
           config
         );
-        console.log(res.data);
         dispatch(addressLoadedSuccess(res.data));
       } catch (err) {
         dispatch(addressLoadedFail(err));
@@ -164,7 +160,7 @@ export const delete_address = createAsyncThunk(
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
-          // 'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `JWT ${localStorage.getItem("access")}`,
           "X-CSRFToken": getCookie("csrftoken"),
         },
@@ -172,7 +168,6 @@ export const delete_address = createAsyncThunk(
       };
       const body = {
         street_address,
-        apartment_address,
         country,
         zip,
         default_addr,
@@ -181,7 +176,7 @@ export const delete_address = createAsyncThunk(
       try {
         const response = await axios.request({
           method: "DELETE",
-          url: `${import.meta.env.VITE_API_ADDRESS_URL}/`,
+          url: `${import.meta.env.VITE_API_ADDRESS_URL}`,
           data: body,
           headers: config.headers,
         });

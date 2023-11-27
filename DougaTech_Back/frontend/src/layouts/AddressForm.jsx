@@ -9,6 +9,7 @@ import {
   FormLabel,
   Input,
   Select,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
@@ -30,13 +31,12 @@ const AddressForm = ({
   const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
   const countryList = useSelector((state) => state.profile?.countries) || [];
-
   const initialValues = {
     street_address: "",
-    // apartment_address: "",
     country: "",
     zip: "",
     default_addr: false,
+    ...selectedAddress
   };
 
   const validationSchema = Yup.object().shape({
@@ -49,6 +49,7 @@ const AddressForm = ({
   const handleCreateAddress = async (values, { setSubmitting }) => {
     if (values && activeItem) {
       const address_type = activeItem === "Billing Address" ? "B" : "S";
+      // console.log(address_type, values)
       if (formType === UPDATE_FORM) {
         await dispatch(
           update_address({
@@ -69,16 +70,9 @@ const AddressForm = ({
     }
   };
 
-  //   const handleFormatCountries = (countries) => {
-  //     const keys = Object.keys(countries);
-  //     return keys.map((key) => {
-  //       return {
-  //         key: key,
-  //         text: countries[key],
-  //         value: key,
-  //       };
-  //     });
-  //   };
+  const handleDeleteAddress = () => {
+    console.log(selectedAddress)
+  }
 
   useEffect(() => {
     if (countryList.data) {
@@ -113,25 +107,6 @@ const AddressForm = ({
                   </FormControl>
                 )}
               </Field>
-              {/* 
-              <Field name="apartment_address">
-                {({ field, form }) => (
-                  <FormControl
-                    isRequired
-                    isInvalid={
-                      form.errors.apartment_address &&
-                      form.touched.apartment_address
-                    }
-                  >
-                    <FormLabel>Apartment Address</FormLabel>
-                    <Input {...field} placeholder="Enter apartment address" />
-                    <FormErrorMessage>
-                      {form.errors.apartment_address}
-                    </FormErrorMessage>
-                  </FormControl>
-                )}
-              </Field> */}
-
               <Field name="country">
                 {({ field, form }) => (
                   <FormControl
@@ -165,7 +140,7 @@ const AddressForm = ({
               </Field>
               <Field name="default_addr">
                 {({ field }) => (
-                  <Checkbox {...field} name="default_addr" mt="5">
+                  <Checkbox {...field} name="default_addr" mt="5" isChecked={field.value}>
                     Make this the default address
                   </Checkbox>
                 )}
@@ -179,6 +154,14 @@ const AddressForm = ({
                 mt={4}
               >
                 {formType === UPDATE_FORM ? "Update" : "Create"}
+              </Button>
+              <Button
+                onClick={handleDeleteAddress}
+                colorScheme="blue"
+                w="full"
+                mt={4}
+              >
+                Delete
               </Button>
             </Form>
           )}
