@@ -102,7 +102,7 @@ const Profile = () => {
                     <Td>
                       <Address
                         selectedAddress={addresses && addresses.billing}
-                        formType={UPDATE_FORM}
+                        formType={addresses.billing ? UPDATE_FORM: CREATE_FORM}
                         activeItem="Billing Address"
                       />
                     </Td>
@@ -122,7 +122,7 @@ const Profile = () => {
                     <Td>
                       <Address
                         selectedAddress={addresses && addresses.shipping}
-                        formType={CREATE_FORM}
+                        formType={addresses.shipping ? UPDATE_FORM: CREATE_FORM}
                         activeItem="Shipping Address"
                       />
                     </Td>

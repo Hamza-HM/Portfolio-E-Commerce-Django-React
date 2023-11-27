@@ -154,7 +154,7 @@ export const update_address = createAsyncThunk(
 export const delete_address = createAsyncThunk(
   "auth/delete_address",
   async (
-    { street_address, country, zip, default_addr, address_type },
+    { address_type },
     { dispatch }
   ) => {
     if (localStorage.getItem("access")) {
@@ -167,10 +167,6 @@ export const delete_address = createAsyncThunk(
         withCredentials: true,
       };
       const body = {
-        street_address,
-        country,
-        zip,
-        default_addr,
         address_type,
       };
       try {

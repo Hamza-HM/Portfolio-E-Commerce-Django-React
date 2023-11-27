@@ -15,7 +15,7 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { create_address, update_address } from "../actions/profile";
+import { create_address, delete_address, update_address } from "../actions/profile";
 // import { create_address, update_address } from '[your_action_path]'; // Update with your action path
 
 const UPDATE_FORM = "UPDATE_FORM";
@@ -71,7 +71,9 @@ const AddressForm = ({
   };
 
   const handleDeleteAddress = () => {
-    console.log(selectedAddress)
+    if (selectedAddress) {
+      dispatch(delete_address(selectedAddress))
+    }
   }
 
   useEffect(() => {
