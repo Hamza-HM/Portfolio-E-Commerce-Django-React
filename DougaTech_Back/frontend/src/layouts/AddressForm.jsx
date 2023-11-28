@@ -13,7 +13,12 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { create_address, delete_address, load_addresses, update_address } from "../actions/profile";
+import {
+  create_address,
+  delete_address,
+  load_addresses,
+  update_address,
+} from "../actions/profile";
 // import { create_address, update_address } from '[your_action_path]'; // Update with your action path
 
 const UPDATE_FORM = "UPDATE_FORM";
@@ -30,13 +35,15 @@ const AddressForm = ({
   const [countries, setCountries] = useState([]);
   const countryList = useSelector((state) => state.profile?.countries) || [];
   const [deleteLoading, setDeleteLoading] = useState(false);
-      const [address_type, SetAddress_type] = useState(activeItem === "Billing Address" ? "B" : "S")
+  const [address_type, SetAddress_type] = useState(
+    activeItem === "Billing Address" ? "B" : "S"
+  );
   const initialValues = {
     street_address: "",
     country: "",
     zip: "",
     default_addr: false,
-    ...selectedAddress
+    ...selectedAddress,
   };
 
   const validationSchema = Yup.object().shape({
@@ -48,7 +55,6 @@ const AddressForm = ({
 
   const handleCreateAddress = async (values, { setSubmitting }) => {
     if (values && activeItem) {
-      // console.log(address_type, values)
       if (formType === UPDATE_FORM) {
         await dispatch(
           update_address({
@@ -75,17 +81,13 @@ const AddressForm = ({
       await dispatch(delete_address(selectedAddress));
       setDeleteLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (countryList.data) {
       setCountries(countryList.data);
     }
   }, [countryList.data]);
-useEffect(() => {
-console.log(selectedAddress, 'from form')
-}, [selectedAddress])
-
 
   return (
     <Center>
@@ -147,7 +149,12 @@ console.log(selectedAddress, 'from form')
               </Field>
               <Field name="default_addr">
                 {({ field }) => (
-                  <Checkbox {...field} name="default_addr" mt="5" isChecked={field.value}>
+                  <Checkbox
+                    {...field}
+                    name="default_addr"
+                    mt="5"
+                    isChecked={field.value}
+                  >
                     Make this the default address
                   </Checkbox>
                 )}
@@ -169,7 +176,7 @@ console.log(selectedAddress, 'from form')
                 w="full"
                 mt={4}
                 isLoading={deleteLoading}
-                loadingText='Deleting'
+                loadingText="Deleting"
               >
                 Delete
               </Button>

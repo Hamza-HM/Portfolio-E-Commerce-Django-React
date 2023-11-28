@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Divider,
   Grid,
@@ -18,6 +19,7 @@ import {
   Thead,
   Tr,
   VStack,
+  transition,
   useColorMode,
 } from "@chakra-ui/react";
 import Address from "../../layouts/AddressForm";
@@ -28,33 +30,60 @@ import { useEffect, useState } from "react";
 const UPDATE_FORM = "UPDATE_FORM";
 const CREATE_FORM = "CREATE_FORM";
 
+import React from "react";
+
+const AddressCard = ({ addressData }) => {
+  console.log(addressData);
+  const CountryList = useSelector((state) => state.profile?.countries);
+  return (
+    <Box
+      border="1px"
+      p={4}
+      mb={4}
+      borderRadius="md"
+      boxShadow="md"
+      transition="transform 0.5s, box-shadow 0.5s"
+      _hover={{
+        transform: "translateY(-5px)",
+        boxShadow: "lg",
+        cursor: "pointer",
+      }}
+    >
+      <Text fontWeight="bold" mb={2} fontSize="lg">
+        Address Details
+      </Text>
+      {addressData && (
+        <VStack align="flex-start" spacing={2} pt={2}>
+          <Text fontSize="md">{`Street: ${addressData.street_address}`}</Text>
+          <Text fontSize="md">{`Country: ${
+            CountryList && CountryList.data[addressData.country]
+          }`}</Text>
+          <Text fontSize="md">{`Zip: ${addressData.zip}`}</Text>
+          <Text fontSize="md">{`Default: ${addressData.default_addr}`}</Text>
+          {/* Add more address fields as needed */}
+          <Button size="sm" colorScheme="blue" mt={2}>
+            Update Address
+          </Button>
+        </VStack>
+      )}
+    </Box>
+  );
+};
+
 const Profile = () => {
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
-  const [ addresses, setAddresses ] = useState({
-    billing: null,
-    shipping: null,
-  });
   const bgColor = { light: "gray.100", dark: "gray.700" };
   const { results } = useSelector((state) => state.profile?.addresses?.data);
+
+  console.log(results);
+  const billingAddress = results?.find((addr) => addr.address_type === "B");
+  const shippingAddress = results?.find((addr) => addr.address_type === "S");
+  console.log(billingAddress, shippingAddress, "found");
   useEffect(() => {
     dispatch(load_countries());
     dispatch(load_addresses({ addrType: "" }));
   }, []);
-
-  useEffect(() => {
-    if (results) {
-      const updatedAddresses = { ...addresses }; // Copy the current state
-      for (const result of results) {
-        if (result.address_type === 'B') {
-          updatedAddresses.billing = result;
-        } else {
-          updatedAddresses.shipping = result;
-        }
-      }
-      setAddresses(updatedAddresses); // Update the state after the loop
-    }
-  }, [results]);
 
   return (
     <HStack spacing={0} justify="center">
@@ -91,6 +120,9 @@ const Profile = () => {
           </TabList>
           <TabPanels my="4">
             <TabPanel>
+              <AddressCard
+                addressData={results?.find((addr) => addr.address_type === "B")}
+              />
               <Table variant="simple">
                 <Thead>
                   <Tr>
@@ -101,8 +133,14 @@ const Profile = () => {
                   <Tr>
                     <Td>
                       <Address
-                        selectedAddress={addresses && addresses.billing}
-                        formType={addresses.billing ? UPDATE_FORM: CREATE_FORM}
+                        selectedAddress={results?.find(
+                          (addr) => addr.address_type === "B"
+                        )}
+                        formType={
+                          results?.find((addr) => addr.address_type === "B")
+                            ? UPDATE_FORM
+                            : CREATE_FORM
+                        }
                         activeItem="Billing Address"
                       />
                     </Td>
@@ -111,6 +149,11 @@ const Profile = () => {
               </Table>
             </TabPanel>
             <TabPanel>
+              <AddressCard
+                addressData={
+                  results && results?.find((addr) => addr.address_type === "S")
+                }
+              />
               <Table variant="simple">
                 <Thead>
                   <Tr>
@@ -121,8 +164,15 @@ const Profile = () => {
                   <Tr>
                     <Td>
                       <Address
-                        selectedAddress={addresses && addresses.shipping}
-                        formType={addresses.shipping ? UPDATE_FORM: CREATE_FORM}
+                        selectedAddress={
+                          results &&
+                          results?.find((addr) => addr.address_type === "S")
+                        }
+                        formType={
+                          results?.find((addr) => addr.address_type === "S")
+                            ? UPDATE_FORM
+                            : CREATE_FORM
+                        }
                         activeItem="Shipping Address"
                       />
                     </Td>
