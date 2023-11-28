@@ -155,7 +155,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR.joinpath('frontend', 'dist'),
@@ -163,10 +163,10 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-]
+# STATICFILES_FINDERS = [
+#     "django.contrib.staticfiles.finders.FileSystemFinder",
+#     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+# ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
 MEDIA_ROOT = BASE_DIR.joinpath('media')
@@ -340,7 +340,7 @@ SOCIAL_AUTH_FACEBOOK_KEY = '818978809953829'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'ba3c5bf6980dc69a3c2af30df0c9381b'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-  'fields': 'first_name,last_name,email',
+  'fields': 'email',
 }
 
 

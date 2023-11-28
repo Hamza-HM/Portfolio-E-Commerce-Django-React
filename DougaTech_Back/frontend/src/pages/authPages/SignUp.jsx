@@ -14,7 +14,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import axios from 'axios'
+import axios from "axios";
 import { EmailIcon, InfoIcon, LockIcon } from "@chakra-ui/icons";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -32,8 +32,9 @@ const SignUp = () => {
     (state) => state.auth
   );
   const initialValues = {
-    first_name: "",
-    last_name: "",
+    // first_name: "",
+    // last_name: "",
+
     username: "",
     email: "",
     password: "",
@@ -41,9 +42,9 @@ const SignUp = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    // username: Yup.string().required("First Name is required"),
-    first_name: Yup.string().required("First Name is required"),
-    last_name: Yup.string().required("Last Name is required"),
+    username: Yup.string().required("First Name is required"),
+    // first_name: Yup.string().required("First Name is required"),
+    // last_name: Yup.string().required("Last Name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
@@ -67,23 +68,29 @@ const SignUp = () => {
   const handleFacebookSignUp = async () => {
     try {
       const response = await axios.get(`
-      ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/facebook/?redirect_uri=${import.meta.env.VITE_REACT_APP_BASE_URL}/facebook`)
-      window.location.replace(response.data.authorization_url)
-
-  }catch (err) {
-      console.log(err)
-  }
+      ${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/auth/o/facebook/?redirect_uri=${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/facebook`);
+      window.location.replace(response.data.authorization_url);
+    } catch (err) {
+      console.log(err);
+    }
   };
-  
+
   const handleGoogleSignUp = async () => {
     try {
       const response = await axios.get(`
-      ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/google-oauth2/?redirect_uri=${import.meta.env.VITE_REACT_APP_BASE_URL}/google`)
-      window.location.replace(response.data.authorization_url)
-
-  }catch (err) {
-      console.log(err)
-  }
+      ${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/auth/o/google-oauth2/?redirect_uri=${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/google`);
+      window.location.replace(response.data.authorization_url);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -123,7 +130,32 @@ const SignUp = () => {
                   Success, confirm your email please!
                 </Text>
               )}
-              <Field name="first_name">
+
+              <Field name="username">
+                {({ field, form }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={
+                      form.errors.first_name && form.touched.first_name
+                    }
+                  >
+                    <InputGroup>
+                      <InputLeftElement children={<InfoIcon />} />
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Username"
+                        aria-label="Username"
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>
+                      {form.errors.first_name}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              {/* <Field name="first_name">
                 {({ field, form }) => (
                   <FormControl
                     isRequired
@@ -165,7 +197,7 @@ const SignUp = () => {
                     <FormErrorMessage>{form.errors.last_name}</FormErrorMessage>
                   </FormControl>
                 )}
-              </Field>
+              </Field> */}
 
               <Divider spacing={3} borderColor="gray.500" />
 

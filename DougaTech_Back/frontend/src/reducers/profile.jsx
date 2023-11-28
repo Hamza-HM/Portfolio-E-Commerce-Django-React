@@ -48,7 +48,7 @@ const profileSlice = createSlice({
       state.addresses.errorMessage = action.payload;
       state.addresses.loading = false;
     },
-    addressCreateSuccess: (state, action) => {
+    addressCreateSuccess: (state) => {
       state.addresses.error = false;
       state.addresses.loading = false;
       state.addresses.success = true;

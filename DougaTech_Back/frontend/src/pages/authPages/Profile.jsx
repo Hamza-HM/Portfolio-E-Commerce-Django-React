@@ -16,8 +16,11 @@ import {
 import { load_addresses, load_countries } from "../../actions/profile";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AddrTabPanel from "../../layouts/AddrTabPanel";
+import ProfileForm from "../../layouts/ProfileForm";
+import ProfileCard from "../../layouts/ProfileCard";
 
 const profileLinks = [
   { name: "Profile", item: "profileInfo" },
@@ -28,12 +31,20 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
   const bgColor = { light: "gray.100", dark: "gray.700" };
-  const { results } = useSelector((state) => state.profile?.addresses?.data);
+  const { addresses, user } = useSelector((state) => state?.profile);
+  const isAuthenticated = useSelector(state => state?.isAuthenticated)
+  const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState("profileInfo");
+
   useEffect(() => {
     dispatch(load_countries());
     dispatch(load_addresses({ addrType: "" }));
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/')
+  }, [isAuthenticated]);
+
 
   return (
     <HStack spacing={0} justify="center">
@@ -72,16 +83,18 @@ const Profile = () => {
             <TabPanels my="4">
               <TabPanel>
                 <AddrTabPanel
-                  addressData={results?.find(
+                  addressData={addresses?.data.results.find(
                     (addr) => addr.address_type === "B"
                   )}
-                />
+                  addrType='B'
+                  />
               </TabPanel>
               <TabPanel>
                 <AddrTabPanel
-                  addressData={results?.find(
+                  addressData={addresses?.data.results.find(
                     (addr) => addr.address_type === "S"
-                  )}
+                    )}
+                    addrType='S'
                 />
               </TabPanel>
             </TabPanels>
@@ -93,6 +106,8 @@ const Profile = () => {
           <Text fontSize="lg" fontWeight="bold" mb={4}>
             ProfileInfo
           </Text>
+          <ProfileCard profileData={{username: user.username, email: user.email, profile_picture: user.profile_picture} } />
+          <ProfileForm  profileInfo={user}/>
         </VStack>
       )}
       {activeItem === "payments" && (

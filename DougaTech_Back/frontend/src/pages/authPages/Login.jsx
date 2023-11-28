@@ -21,6 +21,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/auth";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const initialValues = {
   email: "",
@@ -29,7 +30,6 @@ const initialValues = {
 const validationSchemas = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
-    // .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
 });
 
@@ -42,20 +42,37 @@ const Login = () => {
   );
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    // Implement Google login functionality
     if (values) {
       await dispatch(login(values));
       setSubmitting(false);
     }
   };
-  const handleFacebookLogin = () => {
-    // Implement Facebook login functionality
-    console.log("facebook login");
+  const handleFacebookLogin = async () => {
+    try {
+      const response = await axios.get(`
+      ${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/auth/o/facebook/?redirect_uri=${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/facebook`);
+      window.location.replace(response.data.authorization_url);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    // Implement Google login functionality
-    console.log("google login");
+  const handleGoogleLogin = async () => {
+    try {
+      const response = await axios.get(`
+      ${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/auth/o/google-oauth2/?redirect_uri=${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/google`);
+      window.location.replace(response.data.authorization_url);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -97,7 +114,7 @@ const Login = () => {
                     isInvalid={form.errors.email && form.touched.email}
                   >
                     <InputGroup>
-                      <InputLeftElement children={<InfoIcon />} />
+                      <InputLeftElement children={<EmailIcon />} />
                       <Input
                         {...field}
                         type="text"

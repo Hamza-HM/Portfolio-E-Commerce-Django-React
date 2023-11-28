@@ -21,6 +21,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
+            'first_name',
+            'last_name',
+            'phone_number',
+            'date_of_birth',
+            'profile_picture',
+            'loyalty_points',
+            'social_media_facebook',
+            'social_media_twitter',
+            'social_media_instagram',
+
         ]
     def get_email(self, obj):
         return str(obj.user.email)

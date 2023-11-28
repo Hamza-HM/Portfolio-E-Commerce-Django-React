@@ -8,21 +8,18 @@ User = get_user_model()
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user_email', 'user_first_name', 'user_last_name']
+    list_display = ['user_email', 'user_username']
 
     def user_email(self, obj):
         return str(obj.user.email)
 
-    def user_first_name(self, obj):
-        return str(obj.user.first_name)
-
-    def user_last_name(self, obj):
-        return str(obj.user.last_name)
+    def user_username(self, obj):
+        return str(obj.user.username)
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
     fieldsets = (
-        (None, {"fields": ("first_name", "last_name", "email", "password",)}),
+        (None, {"fields": ("username", "email", "password",)}),
         (_("Personal info"), {"fields": ()}),
         (
             _("Permissions"),

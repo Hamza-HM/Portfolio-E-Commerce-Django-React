@@ -31,13 +31,12 @@ export const load_user = createAsyncThunk(
       };
 
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/users/profile/`,
+        const response = await axios.get(import.meta.env.VITE_API_PROFILE_URL,
           config
         );
         dispatch(userLoadedSuccess(response.data));
-        dispatch(fetchCart());
-        dispatch(load_countries());
+        // dispatch(fetchCart());
+        // dispatch(load_countries());
       } catch (err) {
         dispatch(userLoadedFail(err));
       }

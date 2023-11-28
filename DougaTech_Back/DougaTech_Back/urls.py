@@ -28,11 +28,11 @@ urlpatterns = [
     path('api/users/', include('users.urls')),
     path('api/products/', include('products.api.urls')),
     path('crsf-token/', get_csrf_token, name='csrf-token'),
-    re_path(r"^.*", index, name="api-index")
 
   # others
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   urlpatterns += [re_path(r"^.*", index, name="api-index")]

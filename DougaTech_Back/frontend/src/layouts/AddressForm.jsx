@@ -16,28 +16,22 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   create_address,
   delete_address,
-  load_addresses,
   update_address,
 } from "../actions/profile";
 // import { create_address, update_address } from '[your_action_path]'; // Update with your action path
 
 const UPDATE_FORM = "UPDATE_FORM";
-const CREATE_FORM = "CREATE_FORM"; // Define your update form type if needed
+// const CREATE_FORM = "CREATE_FORM"; // Define your update form type if needed
 
 const AddressForm = ({
   formType,
-  activeItem,
+  address_type,
   selectedAddress,
-  success,
-  loading,
 }) => {
   const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
   const countryList = useSelector((state) => state.profile?.countries) || [];
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [address_type, SetAddress_type] = useState(
-    activeItem === "Billing Address" ? "B" : "S"
-  );
   const initialValues = {
     street_address: "",
     country: "",
@@ -54,7 +48,7 @@ const AddressForm = ({
   });
 
   const handleCreateAddress = async (values, { setSubmitting }) => {
-    if (values && activeItem) {
+    if (values && address_type) {
       if (formType === UPDATE_FORM) {
         await dispatch(
           update_address({
@@ -69,8 +63,8 @@ const AddressForm = ({
             ...values,
             address_type,
           })
-        );
-      }
+          );
+        }
       setSubmitting(false);
     }
   };
@@ -98,7 +92,7 @@ const AddressForm = ({
           onSubmit={handleCreateAddress}
           enableReinitialize
         >
-          {({ isSubmitting, resetForm }) => (
+          {({ isSubmitting }) => (
             <Form>
               <Field name="street_address">
                 {({ field, form }) => (

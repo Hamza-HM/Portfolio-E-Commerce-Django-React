@@ -102,7 +102,6 @@ export const activate = createAsyncThunk(
       await axios.post(import.meta.env.VITE_ACCOUNT_ACTIVATE_URL, body, config);
       dispatch(accountActivationSuccess());
     } catch (err) {
-      console.log(err.response.data);
       dispatch(accountActivationFail(err.response.data));
     }
   }
@@ -112,7 +111,6 @@ export const checkAuthenticated = createAsyncThunk(
   "auth/checkAuthenticated",
   async (_, { dispatch }) => {
     if (localStorage.getItem("access")) {
-      console.log(getCookie("csrftoken"));
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +133,7 @@ export const checkAuthenticated = createAsyncThunk(
           dispatch(authenticatedFail());
         }
       } catch (err) {
-        dispatch(authenticatedFail());
+        dispatch(authenticatedFail(err.reponse.data));
       }
     } else {
       dispatch(authenticatedFail());
@@ -160,7 +158,6 @@ export const passwordReset = createAsyncThunk(
         body,
         config
       );
-      console.log(res.data);
       dispatch(passwordResetSuccess());
     } catch (err) {
       dispatch(passwordResetFail(err.response.data));
@@ -181,7 +178,6 @@ export const resetPasswordConfirmation = createAsyncThunk(
       new_password: password,
       re_new_password: re_password,
     };
-    console.log(body);
     try {
       await axios.post(
         import.meta.env.VITE_PASSWORD_RESET_CONFIRM_URL,
@@ -222,7 +218,6 @@ export const facebookAuth = createAsyncThunk(
       ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/facebook/?${formBody}`,
           config
         );
-        console.log(response.data);
         dispatch(loginSuccess(response.data));
         // dispatch(load_user())
       } catch (error) {
@@ -250,17 +245,14 @@ export const googleAuth = createAsyncThunk(
         "state" : state,
         "code" : code
       };
-      console.log(details)
       const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
 
       try {
       const response = await axios.post(`
       ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/google-oauth2/?${formBody}`, config)
-      console.log(response.data)
       dispatch(loginSuccess(response.data))
       // dispatch(load_user())
       } catch (error) {
-        console.log(error);
         dispatch(loginFail());
         // dispatch(userLoadedFail());
       }

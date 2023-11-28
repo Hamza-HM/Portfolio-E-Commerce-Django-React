@@ -15,7 +15,6 @@ const Facebook = () => {
       const params = queryString.parse(location.search);
       const state = params.state ? params.state : null;
       const code = params.code ? params.code : null;
-      console.log("code:", code, "state:", state);
 
       if (state && code) {
         dispatch(facebookAuth({ state, code }));

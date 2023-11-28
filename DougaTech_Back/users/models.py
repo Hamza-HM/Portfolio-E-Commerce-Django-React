@@ -11,12 +11,11 @@ from .managers import UserManager
 
 class User(AbstractUser):
     email = EmailField(_("Email Address"), unique=True)
-    first_name = CharField(_("First Name"), max_length=100, blank=True)
-    last_name = CharField(_("Last Name"), max_length=100, blank=True)
+    username = CharField(_("Username"), max_length=100, blank=True)
     is_active = models.BooleanField(_("Active"), default=True)
     is_staff = models.BooleanField(_("Staff"), default=False)
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['first_name','last_name']
+    REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
 
@@ -28,11 +27,11 @@ class User(AbstractUser):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    first_name = CharField(_("First Name"), max_length=100, blank=True)
+    last_name = CharField(_("Last Name"), max_length=100, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
-    shipping_address = models.TextField(blank=True)
-    billing_address = models.TextField(blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile/', blank=True)
+    profile_picture = models.ImageField(upload_to='profile', blank=True)
     loyalty_points = models.IntegerField(default=0)
     social_media_facebook = models.URLField(blank=True)
     social_media_twitter = models.URLField(blank=True)

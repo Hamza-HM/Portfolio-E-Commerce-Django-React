@@ -3,7 +3,7 @@ import AddressCard from "./AddressCard";
 import AddressForm from "./AddressForm";
 const UPDATE_FORM = "UPDATE_FORM";
 const CREATE_FORM = "CREATE_FORM";
-const AddrTabPanel = ({ addressData }) => {
+const AddrTabPanel = ({ addressData, addrType }) => {
   return (
     <>
       <AddressCard addrData={addressData} />
@@ -19,9 +19,9 @@ const AddrTabPanel = ({ addressData }) => {
               <AddressForm
                 selectedAddress={addressData}
                 formType={
-                  addressData?.address_type === "B" ? UPDATE_FORM : CREATE_FORM
+                  addressData?.address_type ? UPDATE_FORM : CREATE_FORM
                 }
-                activeItem="Billing Address"
+                address_type={addrType}
               />
             </Td>
           </Tr>

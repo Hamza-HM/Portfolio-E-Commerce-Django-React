@@ -41,7 +41,6 @@ const authSlice = createSlice({
     signUpFail: (state, action) => {
       state.isAuthenticated = false;
       state.error = action.payload;
-      console.log(state.error);
       state.success = null;
     },
     authenticatedSuccess: (state) => {
