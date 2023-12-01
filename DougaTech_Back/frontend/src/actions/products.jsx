@@ -14,7 +14,7 @@ import {
 
 export const loadProducts = createAsyncThunk(
   "products/loadProducts",
-  async (_, { dispatch }) => {
+  async ({ page }, { dispatch }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -24,9 +24,10 @@ export const loadProducts = createAsyncThunk(
 
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_PRODUCT_LIST_URL}`,
+        `${import.meta.env.VITE_PRODUCT_LIST_URL}?page=${page}`,
         config
       );
+      console.log(res.data);
       dispatch(productsLoadedSuccess(res.data));
     } catch (error) {
       dispatch(productsLoadedFail(error));

@@ -44,7 +44,6 @@ class CouponSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()  # Use the CategorySerializer directly
     label = LabelSerializer()  # Use the LabelSerializer directly
-
     class Meta:
         model = Item
         fields = [

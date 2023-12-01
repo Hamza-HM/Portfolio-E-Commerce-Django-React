@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Box, Center, Grid, GridItem } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Center, Grid, GridItem } from "@chakra-ui/react";
 import ProductCard from "../../layouts/ProductCard";
 import { loadProducts } from "../../actions/products";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,9 +9,20 @@ const Products = () => {
   const productList = useSelector(
     (state) => state.products?.productList?.results
   );
+  const [page, setPage] = useState(1);
+  console.log(page);
+  const handleNextPage = () => {
+    setPage(page + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (page !== 0) {
+      setPage(page - 1);
+    }
+  };
 
   useEffect(() => {
-    dispatch(loadProducts());
+    dispatch(loadProducts({ page }));
   }, [dispatch]);
 
   return (
@@ -41,6 +52,8 @@ const Products = () => {
               />
             </GridItem>
           ))}
+        <Button onClick={handleNextPage}>next page</Button>
+        <Button onClick={handlePrevPage}>next page</Button>
       </Grid>
     </Center>
   );
