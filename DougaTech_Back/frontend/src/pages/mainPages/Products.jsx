@@ -6,23 +6,25 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Products = () => {
   const dispatch = useDispatch();
-  const productList = useSelector(
-    (state) => state.products?.productList?.results
-  );
+  const productList = useSelector((state) => state.products?.productList?.results);
+  const links = useSelector((state) => state.products?.productList);
   const [page, setPage] = useState(1);
-  console.log(page);
+  console.log(productList)
+
   const handleNextPage = () => {
-    setPage(page + 1);
+    if (links && links.next) {
+      dispatch(loadProducts({ url: links.next }));
+    }
   };
 
   const handlePrevPage = () => {
-    if (page !== 0) {
-      setPage(page - 1);
+    if (links && links.previous) {
+      dispatch(loadProducts({ url: links.previous }));
     }
   };
 
   useEffect(() => {
-    dispatch(loadProducts({ page }));
+    dispatch(loadProducts({}));
   }, [dispatch]);
 
   return (
@@ -52,9 +54,13 @@ const Products = () => {
               />
             </GridItem>
           ))}
-        <Button onClick={handleNextPage}>next page</Button>
-        <Button onClick={handlePrevPage}>next page</Button>
       </Grid>
+      <Button onClick={handlePrevPage} disabled={!links?.previous}>
+        Previous Page
+      </Button>
+      <Button onClick={handleNextPage} disabled={!links?.next}>
+        Next Page
+      </Button>
     </Center>
   );
 };

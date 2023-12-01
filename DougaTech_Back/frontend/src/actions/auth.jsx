@@ -17,10 +17,7 @@ import {
   passwordResetConfirmFail,
 } from "../reducers/auth";
 import { load_user } from "./profile";
-<<<<<<< HEAD
 import { userLoadedFail } from "../reducers/profile";
-=======
->>>>>>> fc798158e63c854c598fe6b51f393fd5cb1d4e0c
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -44,10 +41,9 @@ export const login = createAsyncThunk(
       );
       dispatch(loginSuccess(res.data));
       dispatch(load_user());
-      
     } catch (err) {
       dispatch(loginFail(err.response.data));
-      dispatch(userLoadedFail())
+      dispatch(userLoadedFail());
     }
   }
 );
@@ -136,7 +132,7 @@ export const checkAuthenticated = createAsyncThunk(
         );
         if (res.data.code !== "token_not_valid") {
           dispatch(authenticatedSuccess());
-          // dispatch(load_user());
+          dispatch(load_user());
         } else {
           dispatch(authenticatedFail());
         }
@@ -161,7 +157,7 @@ export const passwordReset = createAsyncThunk(
       email: email,
     };
     try {
-      const res = await axios.post(
+        await axios.post(
         import.meta.env.VITE_PASSWORD_RESET_URL,
         body,
         config
@@ -227,10 +223,10 @@ export const facebookAuth = createAsyncThunk(
           config
         );
         dispatch(loginSuccess(response.data));
-        dispatch(load_user())
+        dispatch(load_user());
       } catch (error) {
         dispatch(loginFail());
-        dispatch(userLoadedFail())
+        dispatch(userLoadedFail());
       }
     } else {
       dispatch(loginFail("Account login error!"));
@@ -260,12 +256,6 @@ export const googleAuth = createAsyncThunk(
         .join("&");
 
       try {
-<<<<<<< HEAD
-      const response = await axios.post(`
-      ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/google-oauth2/?${formBody}`, config)
-      dispatch(loginSuccess(response.data))
-      dispatch(load_user())
-=======
         const response = await axios.post(
           `
       ${
@@ -274,8 +264,7 @@ export const googleAuth = createAsyncThunk(
           config
         );
         dispatch(loginSuccess(response.data));
-        // dispatch(load_user())
->>>>>>> fc798158e63c854c598fe6b51f393fd5cb1d4e0c
+        dispatch(load_user());
       } catch (error) {
         dispatch(loginFail());
         dispatch(userLoadedFail());
@@ -283,6 +272,7 @@ export const googleAuth = createAsyncThunk(
     }
   }
 );
+
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { dispatch }) => {

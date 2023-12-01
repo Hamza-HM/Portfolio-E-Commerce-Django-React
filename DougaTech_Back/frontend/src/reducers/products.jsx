@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   productList: null,
+  page: 1,
   loading: true,
   error: false,
   errorMessage: "",
@@ -21,6 +22,12 @@ const productSlice = createSlice({
       state.productList = action.payload;
       state.loading = false;
       state.error = false;
+    },
+    inCrementPage: (state) => {
+      state.page += 1
+    },
+    decrementPage: (state) => {
+      state.page -= 1
     },
     productsLoadedFail: (state) => {
       state.productList = [];

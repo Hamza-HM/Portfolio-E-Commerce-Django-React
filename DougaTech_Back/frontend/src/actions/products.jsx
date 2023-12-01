@@ -14,7 +14,7 @@ import {
 
 export const loadProducts = createAsyncThunk(
   "products/loadProducts",
-  async ({ page }, { dispatch }) => {
+  async ({ url }, { dispatch }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -23,10 +23,9 @@ export const loadProducts = createAsyncThunk(
     };
 
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_PRODUCT_LIST_URL}?page=${page}`,
-        config
-      );
+      const requestUrl = url || `${import.meta.env.VITE_PRODUCT_LIST_URL}`;
+
+      const res = await axios.get(requestUrl, config);
       console.log(res.data);
       dispatch(productsLoadedSuccess(res.data));
     } catch (error) {
@@ -34,6 +33,7 @@ export const loadProducts = createAsyncThunk(
     }
   }
 );
+
 export const loadProduct = createAsyncThunk(
   "products/loadProduct",
   async ({ productID }, { dispatch }) => {
