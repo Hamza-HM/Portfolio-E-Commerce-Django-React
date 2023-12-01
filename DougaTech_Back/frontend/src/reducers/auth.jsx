@@ -5,9 +5,6 @@ const initialState = {
   refresh: localStorage.getItem("refresh"),
   error: null,
   isAuthenticated: null,
-  verify: {
-    error: null,
-  },
 };
 
 const authSlice = createSlice({
@@ -45,11 +42,15 @@ const authSlice = createSlice({
     },
     authenticatedSuccess: (state) => {
       state.isAuthenticated = true;
-      state.verify.error = null;
+      state.error = null;
     },
     authenticatedFail: (state, action) => {
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
       state.isAuthenticated = false;
-      state.verify.error = action.payload;
+      state.access = null;
+      state.refresh = null;
+      state.error = action.payload;
     },
     logoutPerform: (state) => {
       localStorage.removeItem("access");
