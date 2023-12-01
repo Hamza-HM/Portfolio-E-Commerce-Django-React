@@ -16,6 +16,8 @@ import {
   passwordResetConfirmSuccess,
   passwordResetConfirmFail,
 } from "../reducers/auth";
+import { load_user } from "./profile";
+import { userLoadedFail } from "../reducers/profile";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -38,8 +40,11 @@ export const login = createAsyncThunk(
         config
       );
       dispatch(loginSuccess(res.data));
+      dispatch(load_user());
+      
     } catch (err) {
       dispatch(loginFail(err.response.data));
+      dispatch(userLoadedFail())
     }
   }
 );
@@ -219,10 +224,10 @@ export const facebookAuth = createAsyncThunk(
           config
         );
         dispatch(loginSuccess(response.data));
-        // dispatch(load_user())
+        dispatch(load_user())
       } catch (error) {
         dispatch(loginFail());
-        // dispatch(userLoadedFail())
+        dispatch(userLoadedFail())
       }
     } else {
       dispatch(loginFail("Account login error!"));
@@ -251,10 +256,10 @@ export const googleAuth = createAsyncThunk(
       const response = await axios.post(`
       ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/google-oauth2/?${formBody}`, config)
       dispatch(loginSuccess(response.data))
-      // dispatch(load_user())
+      dispatch(load_user())
       } catch (error) {
         dispatch(loginFail());
-        // dispatch(userLoadedFail());
+        dispatch(userLoadedFail());
       }
     }
 }

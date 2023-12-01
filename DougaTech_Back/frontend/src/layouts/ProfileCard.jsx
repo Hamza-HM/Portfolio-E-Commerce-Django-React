@@ -1,7 +1,6 @@
 import { Box, Button, Image, Text, VStack } from "@chakra-ui/react";
 
 const ProfileCard = ({profileData}) => {
-    console.log(profileData)
   return (
     <Box
       border="1px"
