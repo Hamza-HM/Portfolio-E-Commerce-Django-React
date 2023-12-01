@@ -31,14 +31,15 @@ export const load_user = createAsyncThunk(
       };
 
       try {
-        const response = await axios.get(import.meta.env.VITE_API_PROFILE_URL,
+        const response = await axios.get(
+          import.meta.env.VITE_API_PROFILE_URL,
           config
         );
         dispatch(userLoadedSuccess(response.data));
         // dispatch(fetchCart());
         // dispatch(load_countries());
       } catch (err) {
-        dispatch(userLoadedFail(err));
+        dispatch(userLoadedFail(err.response.data));
       }
     } else {
       dispatch(userLoadedFail("you must be authenticated!"));
@@ -101,7 +102,7 @@ export const create_address = createAsyncThunk(
           config
         );
         dispatch(addressCreateSuccess(res.data));
-        dispatch(load_addresses({addrType: ''}));
+        dispatch(load_addresses({ addrType: "" }));
       } catch (err) {
         dispatch(addressCreateFail(err.response.data));
       }
@@ -140,7 +141,7 @@ export const update_address = createAsyncThunk(
           config
         );
         dispatch(addressUpdateSuccess(response.data));
-        dispatch(load_addresses({addrType: ''}));
+        dispatch(load_addresses({ addrType: "" }));
       } catch (err) {
         dispatch(addressUpdateFail(err));
       }
@@ -152,14 +153,11 @@ export const update_address = createAsyncThunk(
 
 export const delete_address = createAsyncThunk(
   "auth/delete_address",
-  async (
-    { address_type },
-    { dispatch }
-  ) => {
+  async ({ address_type }, { dispatch }) => {
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `JWT ${localStorage.getItem("access")}`,
           "X-CSRFToken": getCookie("csrftoken"),
         },
@@ -177,7 +175,7 @@ export const delete_address = createAsyncThunk(
         });
 
         dispatch(addressDeleteSuccess(response.data));
-        dispatch(load_addresses({addrType: ''}));
+        dispatch(load_addresses({ addrType: "" }));
       } catch (err) {
         dispatch(addressDeleteFail(err));
       }

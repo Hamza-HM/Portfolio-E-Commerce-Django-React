@@ -26,7 +26,7 @@ class Item(models.Model):
     label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='label_items')
     slug = models.SlugField()
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='media', blank=True, null=True)
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
 
     def __str__(self):
         return str(self.title)

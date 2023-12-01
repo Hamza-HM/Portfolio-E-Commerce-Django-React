@@ -10,6 +10,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from django.middleware.csrf import get_token
+
+
 def index(request):
    return render(request, 'index.html')
 
@@ -17,7 +20,17 @@ def index(request):
 @ensure_csrf_cookie
 @permission_classes([AllowAny])
 def get_csrf_token(request):
-   return Response(status=status.HTTP_200_OK)
+   #  csrf_token = get_token(request)
+    
+   #  # Set the CSRF token in the response JSON data
+   #  response_data = {'csrf_token': csrf_token}
+   #  print('DOUUUUUUUUUUUUUUUGAAAAAAAAAAAAAA',response_data)
+   #  # Set the CSRF token cookie in the response
+   #  response = Response(response_data, status=status.HTTP_200_OK)
+   #  response.set_cookie(key='csrftoken', value=csrf_token, httponly=True, samesite='Strict')
+    
+   #  return response
+   return Response(status = status.HTTP_200_OK)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -16,6 +16,7 @@ import {
   passwordResetConfirmSuccess,
   passwordResetConfirmFail,
 } from "../reducers/auth";
+import { load_user } from "./profile";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -231,34 +232,43 @@ export const facebookAuth = createAsyncThunk(
 );
 
 export const googleAuth = createAsyncThunk(
-  'auth/googleAuth',
-  async ({state, code}, {dispatch}) => {
+  "auth/googleAuth",
+  async ({ state, code }, { dispatch }) => {
     if (state && code && !localStorage.getItem("access")) {
       const config = {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "X-CSRFToken": getCookie("csrftoken"),
-
         },
       };
       const details = {
-        "state" : state,
-        "code" : code
+        state: state,
+        code: code,
       };
-      const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+      const formBody = Object.keys(details)
+        .map(
+          (key) =>
+            encodeURIComponent(key) + "=" + encodeURIComponent(details[key])
+        )
+        .join("&");
 
       try {
-      const response = await axios.post(`
-      ${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/o/google-oauth2/?${formBody}`, config)
-      dispatch(loginSuccess(response.data))
-      // dispatch(load_user())
+        const response = await axios.post(
+          `
+      ${
+        import.meta.env.VITE_REACT_APP_BASE_URL
+      }/auth/o/google-oauth2/?${formBody}`,
+          config
+        );
+        dispatch(loginSuccess(response.data));
+        // dispatch(load_user())
       } catch (error) {
         dispatch(loginFail());
         // dispatch(userLoadedFail());
       }
     }
-}
-)
+  }
+);
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { dispatch }) => {

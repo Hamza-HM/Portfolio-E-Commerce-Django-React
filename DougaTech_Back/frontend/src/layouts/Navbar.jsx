@@ -28,8 +28,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/auth";
 
 const links = [
-  { name: "Card", link: "/card" },
-  { name: "List", link: "/list" },
+  { name: "Home", link: "/" },
+  { name: "Products", link: "/products" },
+  { name: "About", link: "/list" },
   // { name: "Authenticate", link: "/authenticate" },
 ];
 
