@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Image,
   Box,
@@ -17,6 +17,8 @@ import {
 import { addToCart, loadProduct } from "../../actions/products";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import VariationsForm from "../../layouts/VariationsForm";
+import { fetchCart } from "../../actions/cart";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -26,6 +28,10 @@ const ProductDetail = () => {
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
+
+  const handleFetchCart = () => {
+    dispatch(fetchCart())
+  }
 
   const handleAddToCart = () => {
     dispatch(addToCart({ slug, variations }));
@@ -52,30 +58,6 @@ const ProductDetail = () => {
 
   const hasDiscount = discount_price && discount_price < price;
   const images = []; // Add your images data here
-
-  // Function to render variation forms
-  const renderVariationForms = () => {
-    return variations.map((variation) => (
-      <Box key={variation.id}>
-        <Divider my="4" />
-        <Heading size="md">{variation.name}:</Heading>
-        <Stack spacing="4">
-          <form key={variation.id}>
-            <FormControl>
-              <FormLabel>{variation.name}</FormLabel>
-              <Select placeholder={`Select ${variation.name}`}>
-                {variation.item_variations.map((option) => (
-                  <option key={option.id} value={option.value}>
-                    {option.value}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-          </form>
-        </Stack>
-      </Box>
-    ));
-  };
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6}>
@@ -129,8 +111,7 @@ const ProductDetail = () => {
             </Text>
             <Divider />
             <Text fontSize="md">{description}</Text>
-            {/* Render variation forms */}
-            {renderVariationForms()}
+            <VariationsForm variations={variations} slug={slug}/>
           </Stack>
           <Divider my="4" />
           <Stack direction="row" spacing={4}>
@@ -138,10 +119,11 @@ const ProductDetail = () => {
               variant="solid"
               colorScheme="blue"
               onClick={handleAddToCart}
+              
             >
               Add to Cart
             </Button>
-            <Button variant="solid" colorScheme="blue">
+            <Button variant="solid" colorScheme="blue" onClick={handleFetchCart}>
               Buy Now
             </Button>
           </Stack>
