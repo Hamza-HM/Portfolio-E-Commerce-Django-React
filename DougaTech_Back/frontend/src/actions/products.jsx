@@ -26,7 +26,6 @@ export const loadProducts = createAsyncThunk(
       const requestUrl = url || `${import.meta.env.VITE_PRODUCT_LIST_URL}`;
 
       const res = await axios.get(requestUrl, config);
-      console.log(res.data);
       dispatch(productsLoadedSuccess(res.data));
     } catch (error) {
       dispatch(productsLoadedFail(error));
@@ -36,20 +35,18 @@ export const loadProducts = createAsyncThunk(
 
 export const loadProduct = createAsyncThunk(
   "products/loadProduct",
-  async ({ productID }, { dispatch }) => {
+  async ({ id }, { dispatch }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": getCookie("csrftoken"),
       },
     };
-    console.log("from action", productID);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_PRODUCT_LIST}${productID}/`,
+        `${import.meta.env.VITE_PRODUCT_LIST_URL}${id}`,
         config
       );
-      console.log("this is the product data: ", res.data);
       dispatch(productLoadedSuccess(res.data));
     } catch (error) {
       dispatch(productLoadedFail(error));
@@ -73,11 +70,12 @@ export const addToCart = createAsyncThunk(
         slug,
         variations,
       };
+      console.log(body);
 
       try {
-        await axios.post(`${import.meta.env.VITE_ADD_TO_CART}`, body, config);
+        await axios.post(import.meta.env.VITE_ADD_TO_CART_URL, body, config);
         dispatch(productAddedToCartSuccess());
-        dispatch(fetchCart());
+        // dispatch(fetchCart());
       } catch (error) {
         dispatch(productAddedToCartFail());
         console.error(error);
