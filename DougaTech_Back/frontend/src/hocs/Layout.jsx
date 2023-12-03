@@ -4,25 +4,27 @@ import Footer from "../layouts/Footer";
 import { useEffect } from "react";
 import { checkAuthenticated } from "../actions/auth";
 import { load_user } from "../actions/profile";
+import { fetchCart } from "../actions/cart";
 
 const Layout = ({ children }) => {
-    const dispatch = useDispatch()
-    const cart = {
-        'first': 'first',
-        'second': 'second'
-    }
-useEffect(() => {
-  dispatch(checkAuthenticated());
-  dispatch(load_user());
-}, [])
+  const dispatch = useDispatch();
+  const cart = {
+    first: "first",
+    second: "second",
+  };
+  useEffect(() => {
+    dispatch(checkAuthenticated());
+    dispatch(load_user());
+    dispatch(fetchCart());
+  }, []);
 
-    return (
-        <div>
-            <Navbar cart={cart}/>
-            { children }
-            <Footer />
-        </div>
-    );
-}
+  return (
+    <div>
+      <Navbar cart={cart} />
+      {children}
+      <Footer />
+    </div>
+  );
+};
 
 export default Layout;

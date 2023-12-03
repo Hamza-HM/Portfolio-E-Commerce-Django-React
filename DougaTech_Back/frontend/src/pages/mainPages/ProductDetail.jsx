@@ -30,8 +30,8 @@ const ProductDetail = () => {
   };
 
   const handleFetchCart = () => {
-    dispatch(fetchCart())
-  }
+    dispatch(fetchCart());
+  };
 
   const handleAddToCart = () => {
     dispatch(addToCart({ slug, variations }));
@@ -58,6 +58,34 @@ const ProductDetail = () => {
 
   const hasDiscount = discount_price && discount_price < price;
   const images = []; // Add your images data here
+
+  const renderWithOrWithoutVariations = () => {
+    if (variations && variations.length > 0) {
+      return <VariationsForm variations={variations} slug={slug} />;
+    } else {
+      return (
+        <>
+          <Divider my="4" />
+          <Stack direction="row" spacing={4}>
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </Button>
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={handleFetchCart}
+            >
+              Buy Now
+            </Button>
+          </Stack>
+        </>
+      );
+    }
+  };
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6}>
@@ -97,7 +125,7 @@ const ProductDetail = () => {
                   <Text fontSize="2xl" textDecoration="line-through" mr="2">
                     ${price}
                   </Text>
-                  <Text fontSize="2xl">${price - discount_price}</Text>
+                  <Text fontSize="2xl">${price - price * discount_price}</Text>
                 </>
               ) : (
                 <Text fontSize="2xl">${price}</Text>
@@ -109,24 +137,11 @@ const ProductDetail = () => {
             <Text fontSize="md" color="gray.600">
               Label: {label}
             </Text>
+            S
             <Divider />
             <Text fontSize="md">{description}</Text>
-            <VariationsForm variations={variations} slug={slug}/>
           </Stack>
-          <Divider my="4" />
-          <Stack direction="row" spacing={4}>
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              onClick={handleAddToCart}
-              
-            >
-              Add to Cart
-            </Button>
-            <Button variant="solid" colorScheme="blue" onClick={handleFetchCart}>
-              Buy Now
-            </Button>
-          </Stack>
+          {renderWithOrWithoutVariations()}
         </Box>
       </GridItem>
     </Grid>

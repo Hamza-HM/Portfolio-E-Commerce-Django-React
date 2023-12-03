@@ -26,7 +26,8 @@ import {
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/auth";
-
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { useEffect, useState } from "react";
 const links = [
   { name: "Home", link: "/" },
   { name: "Products", link: "/products" },
@@ -60,8 +61,25 @@ const NavLink = (props) => {
 const WithAction = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [quantity, setQuantity] = useState(0);
   const { isAuthenticated } = useSelector((state) => state?.auth);
+  const order_items = useSelector(
+    (state) => state.cart.shoppingCart?.order_items
+  );
   const dispatch = useDispatch();
+  console.log(order_items);
+  const handleCalculateQuantity = () => {
+    if (order_items) {
+      const totalQuantity = order_items.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+      setQuantity(totalQuantity);
+    }
+  };
+  useEffect(() => {
+    handleCalculateQuantity();
+  }, [order_items]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -104,6 +122,26 @@ const WithAction = () => {
             </HStack>
           </HStack>
           <HStack>
+            {quantity > 0 && ( // Display quantity only if it's greater than 0
+              <Box
+                position="absolute"
+                top="-8px"
+                right="-8px"
+                bg="red.500"
+                color="white"
+                borderRadius="full"
+                padding="2px 6px"
+                fontSize="xs"
+              >
+                {quantity}
+              </Box>
+            )}
+            <IconButton
+              variant="shadow"
+              area-label="Cart"
+              icon={<AiOutlineShoppingCart />}
+              onClick={() => console.log(quantity)}
+            />
             {isAuthenticated ? (
               <>
                 <Link

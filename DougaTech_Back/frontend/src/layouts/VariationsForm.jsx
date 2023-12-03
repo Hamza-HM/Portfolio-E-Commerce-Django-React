@@ -1,5 +1,5 @@
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 import {
   Box,
   Divider,
@@ -9,17 +9,17 @@ import {
   FormLabel,
   Select,
   Button,
-} from '@chakra-ui/react'; // Import Chakra UI components or your preferred UI library components
-import { addToCart } from '../actions/products';
-import {useDispatch} from 'react-redux'
+} from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../actions/products";
 
-const VariationsForm = ({ variations, slug }) => {
-    const dispatch = useDispatch();
+const VariationsForm = ({ variations, slug, handleAddToCart }) => {
+  const dispatch = useDispatch();
 
   const initialValues = variations.reduce((acc, variation) => {
     return {
       ...acc,
-      [variation.id]: '',
+      [variation.id]: "",
     };
   }, {});
 
@@ -27,22 +27,24 @@ const VariationsForm = ({ variations, slug }) => {
     variations.reduce((acc, variation) => {
       return {
         ...acc,
-        [variation.id]: Yup.string().required(`Please select ${variation.name}`),
+        [variation.id]: Yup.string().required(
+          `Please select ${variation.name}`
+        ),
       };
     }, {})
   );
 
-    const handleAddToCart = (values, { resetForm }) => {
-        const submittedVariations = Object.values(values); // Pass the form values to the parent component
-        dispatch(addToCart({ slug, variations: submittedVariations  }));
-        resetForm();
-      };
+  const handleFormSubmit = (values, { resetForm }) => {
+    const variations = Object.values(values);
+    dispatch(addToCart({ slug, variations }));
+    resetForm();
+  };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleAddToCart}
+      onSubmit={handleFormSubmit}
     >
       {({ dirty, isValid }) => (
         <Form>
@@ -53,12 +55,18 @@ const VariationsForm = ({ variations, slug }) => {
               <Stack spacing="4">
                 <Field name={variation.id}>
                   {({ field, form }) => (
-                    <FormControl isInvalid={form.errors[variation.id] && form.touched[variation.id]}>
+                    <FormControl
+                      isInvalid={
+                        form.errors[variation.id] && form.touched[variation.id]
+                      }
+                    >
                       <FormLabel>{variation.name}</FormLabel>
                       <Select
                         {...field}
                         placeholder={`Select ${variation.name}`}
-                        onChange={(e) => form.setFieldValue(field.name, e.target.value)}
+                        onChange={(e) =>
+                          form.setFieldValue(field.name, e.target.value)
+                        }
                       >
                         {variation.item_variations.map((option) => (
                           <option key={option.id} value={option.id}>
@@ -72,14 +80,20 @@ const VariationsForm = ({ variations, slug }) => {
               </Stack>
             </Box>
           ))}
-          <Button
-            mt="4"
-            colorScheme="teal"
-            type="submit"
-            disabled={!dirty || !isValid}
-          >
-            Submit
-          </Button>
+          <Divider my="4" />
+
+          <Stack direction="row" spacing={4}>
+            <Button type="submit" variant="solid" colorScheme="blue">
+              Add to Cart
+            </Button>
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              // onClick={"handleFetchCart"}
+            >
+              Buy Now
+            </Button>
+          </Stack>
         </Form>
       )}
     </Formik>

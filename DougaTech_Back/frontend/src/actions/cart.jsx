@@ -38,7 +38,7 @@ export const fetchCart = createAsyncThunk(
           config
         );
         dispatch(fetchCartSuccess(res.data));
-        console.log(res.data);
+        // console.log(res.data);
       } catch (error) {
         dispatch(fetchCartFail(error.response.data));
       }
