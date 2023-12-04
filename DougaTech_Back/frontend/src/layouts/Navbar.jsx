@@ -26,7 +26,9 @@ import {
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/auth";
-
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { useEffect, useState } from "react";
+import {useNavigate} from 'react-router-dom'
 const links = [
   { name: "Home", link: "/" },
   { name: "Products", link: "/products" },
@@ -57,15 +59,34 @@ const NavLink = (props) => {
   );
 };
 
-const WithAction = () => {
+const WithAction = ({ cart }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isAuthenticated } = useSelector((state) => state?.auth);
+  const [quantity, setQuantity] = useState(0);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { isAuthenticated } = useSelector((state) => state?.auth);
+  const order_items = cart.shoppingCart?.order_items
+
+  const handleCalculateQuantity = () => {
+    if (order_items) {
+      const totalQuantity = order_items.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+      setQuantity(totalQuantity);
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
   };
+  
+  useEffect(() => {
+    handleCalculateQuantity();
+  }, [order_items]);
+
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -106,6 +127,29 @@ const WithAction = () => {
           <HStack>
             {isAuthenticated ? (
               <>
+            <Box display='flex' alignItems='center'>
+            {quantity > 0 && ( // Display quantity only if it's greater than 0
+              <Box
+              
+                position="relative "
+                top="-8px"
+                right="-8px"
+                bg="red.500"
+                color="white"
+                borderRadius="full"
+                padding="2px 6px"
+                fontSize="xs"
+              >
+                {quantity}
+              </Box>
+            )}
+            <IconButton
+              variant="shadow"
+              area-label="Cart"
+              icon={<AiOutlineShoppingCart />}
+              onClick={() => navigate('/cart')}
+            />
+            </Box>
                 <Link
                   to="/"
                   onClick={handleLogout}

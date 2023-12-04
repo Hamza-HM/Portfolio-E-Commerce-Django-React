@@ -19,6 +19,7 @@ import {
   updateItemCartQuantityFail,
 } from "../reducers/cart";
 
+
 // Cart dtails
 export const fetchCart = createAsyncThunk(
   "products/fetchCart",
@@ -33,12 +34,12 @@ export const fetchCart = createAsyncThunk(
         withCredentials: true,
       };
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_ORDER_SUMMARY_URL}`,
-          config
-        );
-        dispatch(fetchCartSuccess(res.data));
-        console.log(res.data);
+          const res = await axios.get(
+            `${import.meta.env.VITE_ORDER_SUMMARY_URL}`,
+            config
+          );
+          dispatch(fetchCartSuccess(res.data));
+        // console.log(res.data);
       } catch (error) {
         dispatch(fetchCartFail(error.response.data));
       }
@@ -53,7 +54,7 @@ export const removeCartItem = createAsyncThunk(
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
-          // 'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `JWT ${localStorage.getItem("access")}`,
           "X-CSRFToken": getCookie("csrftoken"),
         },
@@ -61,14 +62,18 @@ export const removeCartItem = createAsyncThunk(
       };
 
       try {
-        const response = await axios.request({
-          method: "DELETE",
-          url: `${
-            import.meta.env.VITE_API_ORDER_ITEMS_DELETE_URL
-          }${itemID}/delete/`,
-          headers: config.headers,
-        });
-        dispatch(cartItemRemovedSuccess(response.data));
+        const res = await axios.delete(`${
+          import.meta.env.VITE_DELETE_ORDER_ITEM_URL
+        }${itemID}/delete/`,config)
+
+        // const res = await axios.request({
+        //   method: "DELETE",
+        //   url: `${
+        //     import.meta.env.VITE_DELETE_ORDER_ITEM_URL
+        //   }${itemID}/delete/`,
+        //   headers: config.headers,
+        // });
+        dispatch(cartItemRemovedSuccess(res.data));
         dispatch(fetchCart());
       } catch (error) {
         dispatch(cartItemRemovedFail(error.response.data));
@@ -98,7 +103,7 @@ export const updateItemCartQuantity = createAsyncThunk(
 
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_ORDER_ITEMS_UPDATE_QUANTITY_URL}`,
+          `${import.meta.env.VITE_UPDATE_CART_ITEM_URL}`,
           body,
           config
         );

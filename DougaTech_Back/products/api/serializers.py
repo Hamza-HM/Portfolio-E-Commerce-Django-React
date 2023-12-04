@@ -44,6 +44,7 @@ class CouponSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()  # Use the CategorySerializer directly
     label = LabelSerializer()  # Use the LabelSerializer directly
+    discount_price = serializers.SerializerMethodField()
     class Meta:
         model = Item
         fields = [
@@ -57,7 +58,10 @@ class ItemSerializer(serializers.ModelSerializer):
             'description',
             'image'
         ]
-
+    def get_discount_price(self, obj):
+        if obj.discount_price:
+            return float(obj.price) * float(obj.discount_price)
+        return 0.0
 
 
 class VariationDetailSerializer(serializers.ModelSerializer):

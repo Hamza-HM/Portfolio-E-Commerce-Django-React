@@ -32,7 +32,7 @@ const Profile = () => {
   const { colorMode } = useColorMode();
   const bgColor = { light: "gray.100", dark: "gray.700" };
   const { addresses, user } = useSelector((state) => state?.profile);
-  const isAuthenticated = useSelector(state => state?.isAuthenticated)
+  const {isAuthenticated} = useSelector(state => state?.auth)
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState("profileInfo");
 
@@ -42,7 +42,9 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/')
+    if (!isAuthenticated){
+      navigate('/')
+    }
   }, [isAuthenticated]);
 
 

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from users.models import Address
 import math
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 User = get_user_model()
 # Create your models here.
@@ -18,10 +19,15 @@ class Label(models.Model):
         return str(self.title)
 
 class Item(models.Model):
-    #variants TODO
     title = models.CharField(max_length=100)
     price = models.FloatField()
-    discount_price = models.FloatField(null=True, blank=True)
+    discount_price = models.DecimalField(
+        max_digits=3,  # Total digits
+        decimal_places=2,  # Digits after the decimal point
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(1)]
+    )
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_items')
     label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='label_items')
     slug = models.SlugField()
@@ -67,7 +73,7 @@ class OrderItem(models.Model):
         return self.quantity * self.item.price
 
     def get_total_item_discount_price(self):
-        return self.item.price * self.item.discount_price
+        return float(self.item.price) * float(self.item.discount_price)
 
     def get_total_discount_price(self):
         return self.get_total_item_discount_price() * self.quantity
@@ -119,7 +125,12 @@ class Payment(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=15)
-    amount = models.FloatField()
+    amount = models.DecimalField(
+        max_digits=3,
+          decimal_places=2,
+                  validators=[MinValueValidator(0), MaxValueValidator(1)]
+
+          )
 
     def __str__(self):
         return str(self.code)

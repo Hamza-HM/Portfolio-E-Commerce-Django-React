@@ -10,6 +10,7 @@ import {
   productAddedToCartSuccess,
   productAddedToCartFail,
 } from "../reducers/products";
+import { fetchCart } from "./cart";
 // import { fetchCart } from "./cart";
 
 export const loadProducts = createAsyncThunk(
@@ -75,7 +76,7 @@ export const addToCart = createAsyncThunk(
       try {
         await axios.post(import.meta.env.VITE_ADD_TO_CART_URL, body, config);
         dispatch(productAddedToCartSuccess());
-        // dispatch(fetchCart());
+        dispatch(fetchCart());
       } catch (error) {
         dispatch(productAddedToCartFail());
         console.error(error);

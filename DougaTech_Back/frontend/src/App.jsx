@@ -16,6 +16,7 @@ import Facebook from "./pages/authPages/FacebookAuth";
 import Profile from "./pages/authPages/Profile";
 import Products from "./pages/mainPages/Products";
 import ProductDetail from "./pages/mainPages/ProductDetail";
+import OrderSummary from "./pages/mainPages/OrderSummary";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
             <Route exact path="/profile" element={<Profile />} />
             <Route exact path="/products" element={<Products />} />
             <Route exact path="/products/:id" element={<ProductDetail />} />
+            <Route exact path="/cart" element={<OrderSummary />} />
             <Route exact path="/list" element={<List />} />
           </Routes>
         </Layout>

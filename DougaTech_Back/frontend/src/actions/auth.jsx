@@ -18,6 +18,7 @@ import {
 } from "../reducers/auth";
 import { load_user } from "./profile";
 import { userLoadedFail } from "../reducers/profile";
+import { fetchCart } from "./cart";
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -40,7 +41,7 @@ export const login = createAsyncThunk(
         config
       );
       dispatch(loginSuccess(res.data));
-      dispatch(load_user());
+      // dispatch(load_user());
     } catch (err) {
       dispatch(loginFail(err.response.data));
       dispatch(userLoadedFail());
@@ -132,12 +133,14 @@ export const checkAuthenticated = createAsyncThunk(
         );
         if (res.data.code !== "token_not_valid") {
           dispatch(authenticatedSuccess());
-          dispatch(load_user());
+          // dispatch(load_user());
+          // dispatch(fetchCart());
         } else {
           dispatch(authenticatedFail());
         }
       } catch (err) {
-        dispatch(authenticatedFail(err.reponse.data));
+        console.log('failed')
+        dispatch(authenticatedFail(err.reponse?.data));
       }
     } else {
       dispatch(authenticatedFail());
@@ -223,7 +226,7 @@ export const facebookAuth = createAsyncThunk(
           config
         );
         dispatch(loginSuccess(response.data));
-        dispatch(load_user());
+        // dispatch(load_user());
       } catch (error) {
         dispatch(loginFail());
         dispatch(userLoadedFail());
@@ -264,7 +267,7 @@ export const googleAuth = createAsyncThunk(
           config
         );
         dispatch(loginSuccess(response.data));
-        dispatch(load_user());
+        // dispatch(load_user());
       } catch (error) {
         dispatch(loginFail());
         dispatch(userLoadedFail());

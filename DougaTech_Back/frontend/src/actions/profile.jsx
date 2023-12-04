@@ -16,7 +16,6 @@ import {
   addressDeleteSuccess,
   addressDeleteFail,
 } from "../reducers/profile";
-//   import { fetchCart } from "./cart";
 
 export const load_user = createAsyncThunk(
   "auth/load_user",
@@ -36,8 +35,6 @@ export const load_user = createAsyncThunk(
           config
         );
         dispatch(userLoadedSuccess(response.data));
-        // dispatch(fetchCart());
-        // dispatch(load_countries());
       } catch (err) {
         dispatch(userLoadedFail(err.response.data));
       }
