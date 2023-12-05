@@ -45,10 +45,8 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.error = null;
       state.loading = false;
-
     },
     authenticatedFail: (state, action) => {
-      console.log('douga')
       state.loading = false;
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
@@ -56,7 +54,6 @@ const authSlice = createSlice({
       state.access = null;
       state.refresh = null;
       state.error = action.payload;
-
     },
     logoutPerform: (state) => {
       localStorage.removeItem("access");

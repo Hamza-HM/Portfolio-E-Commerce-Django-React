@@ -17,6 +17,7 @@ import Profile from "./pages/authPages/Profile";
 import Products from "./pages/mainPages/Products";
 import ProductDetail from "./pages/mainPages/ProductDetail";
 import OrderSummary from "./pages/mainPages/OrderSummary";
+import Checkout from "./pages/mainPages/Checkout.";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
             <Route exact path="/products" element={<Products />} />
             <Route exact path="/products/:id" element={<ProductDetail />} />
             <Route exact path="/cart" element={<OrderSummary />} />
+            <Route exact path="/checkout" element={<Checkout />} />
             <Route exact path="/list" element={<List />} />
           </Routes>
         </Layout>

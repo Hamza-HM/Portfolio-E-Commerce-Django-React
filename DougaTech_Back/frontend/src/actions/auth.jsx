@@ -139,7 +139,7 @@ export const checkAuthenticated = createAsyncThunk(
           dispatch(authenticatedFail());
         }
       } catch (err) {
-        console.log('failed')
+        console.log("failed");
         dispatch(authenticatedFail(err.reponse?.data));
       }
     } else {
@@ -160,11 +160,7 @@ export const passwordReset = createAsyncThunk(
       email: email,
     };
     try {
-        await axios.post(
-        import.meta.env.VITE_PASSWORD_RESET_URL,
-        body,
-        config
-      );
+      await axios.post(import.meta.env.VITE_PASSWORD_RESET_URL, body, config);
       dispatch(passwordResetSuccess());
     } catch (err) {
       dispatch(passwordResetFail(err.response.data));

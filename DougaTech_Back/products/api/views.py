@@ -62,15 +62,7 @@ class CategoryView(ListAPIView):
 
 class OrderItemDeleteView(DestroyAPIView):
     permission_classes = (IsAuthenticated,)
-    lookup_field = 'pk'
     queryset = OrderItem.objects.all()
-
-    def destroy(self, request, *args, **kwargs):
-        print('DOUUUUUUUUUUUUUUUUUGA', self.request)
-        print('HEEEEEEELOOOOOOOOOOOOOOOOOOOOOOO')
-        instance = self.get_object()
-        print("Deleting OrderItem with PK:", instance.pk)
-        return super().destroy(request, *args, **kwargs)
     
 
 class OrderQuantityUpdateView(APIView):

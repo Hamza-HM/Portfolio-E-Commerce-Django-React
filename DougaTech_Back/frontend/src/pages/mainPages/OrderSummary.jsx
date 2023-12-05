@@ -28,8 +28,6 @@ const OrderSummary = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state?.auth);
 
-  console.log(orderItems);
-
   const calculateTotalPrice = () => {
     let totalPrice = 0;
     if (orderItems) {
