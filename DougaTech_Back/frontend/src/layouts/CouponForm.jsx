@@ -7,16 +7,16 @@ import {
   Input,
   FormErrorMessage,
   useToast,
+  Box,
+  Text,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { getCoupon } from "../actions/cart";
 
 const CouponForm = () => {
-  const couponStateFromRedux = useSelector((state) => state?.payment.coupon);
   const dispatch = useDispatch();
-  const toast = useToast();
-
+  const { coupon } = useSelector((state) => state?.payment);
   const initialValues = {
     code: "",
   };
@@ -25,36 +25,21 @@ const CouponForm = () => {
     code: Yup.string().required("Coupon code is required"),
   });
 
-  const handleCouponSubmit = (values, actions) => {
-    dispatch(getCoupon({ code: values.code }))
-      .then(() => {
-        actions.setSubmitting(false);
-        actions.resetForm();
-      })
-      .catch((error) => {
-        console.log(error)
-        actions.setSubmitting(false);
-        toast({
-          title: "Error",
-          description: "Invalid coupon!",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      });
+  const handleCouponSubmit = async (values, { setSubmitting, resetForm }) => {
+    await dispatch(getCoupon({ code: values.code }));
+    setSubmitting(false);
+    resetForm();
   };
 
   return (
-    <>
-      {couponStateFromRedux.error && (
-        <p>There was an error: {couponStateFromRedux.error}</p>
-      )}
+    <Box mt="5">
+      {coupon?.error && <Text color="red">Invalid Coupon</Text>}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, actions) => handleCouponSubmit(values, actions)}
+        onSubmit={handleCouponSubmit}
       >
-        {( isSubmitting ) => (
+        {({ isSubmitting }) => (
           <Form>
             <Field name="code">
               {({ field, form }) => (
@@ -62,7 +47,7 @@ const CouponForm = () => {
                   isInvalid={form.errors.code && form.touched.code}
                   mb={4}
                 >
-                  <FormLabel htmlFor="code">Coupon Code</FormLabel>
+                  {/* <FormLabel htmlFor="code">Coupon Code</FormLabel> */}
                   <Input
                     {...field}
                     id="code"
@@ -75,16 +60,16 @@ const CouponForm = () => {
             </Field>
             <Button
               type="submit"
-              isLoading={formikProps.isSubmitting}
-              loadingText="Submitting"
+              isLoading={isSubmitting}
+              loadingText="Submitting..."
               colorScheme="blue"
             >
-              Submit
+              Apply
             </Button>
           </Form>
         )}
       </Formik>
-    </>
+    </Box>
   );
 };
 

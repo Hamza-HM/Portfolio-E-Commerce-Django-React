@@ -2,14 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getCookie } from "../urils/cookieUtil";
 
-// import {
-//   paymentSuccess,
-//   paymentFail,
-//   couponAddedSuccess,
-//   couponAddedFail,
-//   paymentListedSuccess,
-//   paymentListedFail
-// } from "../reducers/payment"
+import {
+  paymentSuccess,
+  paymentFail,
+  couponAddedSuccess,
+  couponAddedFail,
+  paymentListedSuccess,
+  paymentListedFail,
+} from "../reducers/payment";
 import {
   fetchCartSuccess,
   fetchCartFail,
@@ -18,7 +18,6 @@ import {
   updateItemCartQuantitySuccess,
   updateItemCartQuantityFail,
 } from "../reducers/cart";
-
 
 // Cart dtails
 export const fetchCart = createAsyncThunk(
@@ -34,11 +33,11 @@ export const fetchCart = createAsyncThunk(
         withCredentials: true,
       };
       try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_ORDER_SUMMARY_URL}`,
-            config
-          );
-          dispatch(fetchCartSuccess(res.data));
+        const res = await axios.get(
+          `${import.meta.env.VITE_ORDER_SUMMARY_URL}`,
+          config
+        );
+        dispatch(fetchCartSuccess(res.data));
         // console.log(res.data);
       } catch (error) {
         dispatch(fetchCartFail(error.response.data));
@@ -54,7 +53,7 @@ export const removeCartItem = createAsyncThunk(
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `JWT ${localStorage.getItem("access")}`,
           "X-CSRFToken": getCookie("csrftoken"),
         },
@@ -62,9 +61,10 @@ export const removeCartItem = createAsyncThunk(
       };
 
       try {
-        const res = await axios.delete(`${
-          import.meta.env.VITE_DELETE_ORDER_ITEM_URL
-        }${itemID}/delete/`,config)
+        const res = await axios.delete(
+          `${import.meta.env.VITE_DELETE_ORDER_ITEM_URL}${itemID}/delete/`,
+          config
+        );
 
         // const res = await axios.request({
         //   method: "DELETE",
@@ -174,7 +174,7 @@ export const getCoupon = createAsyncThunk(
       };
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_ADD_COUPON}`,
+          `${import.meta.env.VITE_ADD_COUPON_URL}`,
           body,
           config
         );

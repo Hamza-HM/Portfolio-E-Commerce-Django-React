@@ -275,6 +275,7 @@ class AddCouponView(APIView):
             coupon = get_object_or_404(Coupon, code=code)
             order.coupon = coupon
             order.save()
+            return Response({'detail': 'Added coupon Successfuly'}, status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response({'detail': 'Invalid data'}, status.HTTP_404_NOT_FOUND)
 

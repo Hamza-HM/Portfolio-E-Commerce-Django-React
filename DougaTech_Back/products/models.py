@@ -110,7 +110,7 @@ class Order(models.Model):
         for order_item in self.items.all():
             total += order_item.get_final_price()
         if self.coupon is not None:
-            total -= self.coupon.amount
+            total -=  (total * float(self.coupon.amount))
         return custom_round(total)
 
 class Payment(models.Model):

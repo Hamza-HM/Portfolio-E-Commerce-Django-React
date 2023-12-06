@@ -1,36 +1,24 @@
-import { useState } from "react";
-import {
-  Box,
-  Grid,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
-  Radio,
-  RadioGroup,
-  Button,
-  Icon,
-} from "@chakra-ui/react";
+import { useEffect } from "react";
+import { Box, Grid, Heading, Button, Icon } from "@chakra-ui/react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { FaPhone, FaEnvelope } from "react-icons/fa";
-
-// Mock products data
-const products = [
-  { id: 1, name: "Product 1", price: 20, quantity: 2 },
-  { id: 2, name: "Product 2", price: 30, quantity: 1 },
-  // Add more products as needed
-];
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import OrderItems from "../../layouts/OrderItems";
+import CouponForm from "../../layouts/CouponForm";
+import AddressSelector from "../../layouts/AddressSelector";
+import CheckoutForm from "../../layouts/CheckoutForm";
+// import CheckoutForm from "../../layouts/CheckoutForm";
 
 const Checkout = () => {
-  const [discountCode, setDiscountCode] = useState("");
-  const [shippingMethod, setShippingMethod] = useState("standard");
-  const [paymentMethod, setPaymentMethod] = useState("creditCard");
-  // Other state variables for form data
+  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state?.auth);
 
-  // Function to handle applying the discount code
-  const handleApplyDiscount = () => {
-    // Logic to apply the discount code
-    // Update state or perform actions accordingly
-  };
+  const stripePromise = loadStripe(
+    "pk_test_51NnmFBBeVuYrOQ5OZ8WLFbmyUplR04WN4MriMwnIDc9PlvuNMFpEjH2blD9hc9UNPJSphr1gByBhQQak7AGJnVcc00nKqAHQJc"
+  );
 
   // Function to handle placing the order
   const handlePlaceOrder = () => {
@@ -38,6 +26,11 @@ const Checkout = () => {
     // Perform actions like payment processing, order placement, etc.
   };
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/");
+    }
+  }, []);
   return (
     <>
       <Box
@@ -52,50 +45,22 @@ const Checkout = () => {
         </Heading>
         <p>Complete your purchase</p>
       </Box>
-      <Grid templateColumns="2fr 1fr" m="5">
+      <Grid templateColumns="2fr 1fr" m="5" gap={10}>
         {/* Left Side */}
         <Box>
-          <Heading as="h2" mb={4} fontSize="xl">
-            Shipping Information
-          </Heading>
-          {/* Form for shipping information */}
-          <FormControl>
-            {/* Shipping form fields */}
-            {/* ... */}
-            <Button variant="link" mt={4}>
-              Billing address same as shipping
-            </Button>
-          </FormControl>
-
           <Heading as="h3" mt={8} mb={4} fontSize="xl">
-            Shipping Method
+            Address Information
           </Heading>
-          {/* Radio buttons for shipping methods */}
-          <RadioGroup
-            value={shippingMethod}
-            onChange={(e) => setShippingMethod(e.target.value)}
-          >
-            <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-              <Radio value="standard">Standard Shipping</Radio>
-              <Radio value="express">Express Shipping</Radio>
-            </Grid>
-          </RadioGroup>
-
+          <AddressSelector />
+          <Link to="/profile">
+            <Button>Update Address</Button>
+          </Link>
           <Heading as="h3" mt={8} mb={4} fontSize="xl">
-            Payment Information
+            Payment:
           </Heading>
-          {/* Radio buttons for payment methods */}
-          <RadioGroup
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          >
-            <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-              <Radio value="creditCard">Credit Card</Radio>
-              <Radio value="paypal">PayPal</Radio>
-            </Grid>
-          </RadioGroup>
-          {/* Payment form fields */}
-          {/* ... */}
+          <Elements stripe={stripePromise}>
+            <CheckoutForm />
+          </Elements>
         </Box>
 
         {/* Right Side */}
@@ -103,33 +68,9 @@ const Checkout = () => {
           <Heading as="h2" mb={4} fontSize="xl">
             Order Summary
           </Heading>
-          {/* Display products in cart */}
-          {products.map((product) => (
-            <Grid key={product.id} templateColumns="1fr 1fr" gap={4} mb={4}>
-              <Box>{product.name}</Box>
-              <Box>Quantity: {product.quantity}</Box>
-              {/* Display other product details */}
-            </Grid>
-          ))}
-          {/* Discount Code input */}
-          {/* Subtotal */}
-          {/* Shipping Cost */}
-          {/* Discount Percentage */}
-          {/* Order Total */}
-          <FormControl>
-            <FormLabel>Discount Code</FormLabel>
-            <Grid templateColumns="2fr 1fr" gap={4} alignItems="center">
-              <Input
-                type="text"
-                placeholder="Enter discount code"
-                value={discountCode}
-                onChange={(e) => setDiscountCode(e.target.value)}
-              />
-              <Button colorScheme="blue" onClick={handleApplyDiscount}>
-                Apply
-              </Button>
-            </Grid>
-          </FormControl>
+          {/* Display  in cart */}
+          <OrderItems />
+          <CouponForm />
 
           {/* Place Order */}
           <Box mt={8}>

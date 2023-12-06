@@ -1,10 +1,13 @@
-import { Box, Button, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 
 const AddressCard = ({ addrData }) => {
   const CountryList = useSelector((state) => state.profile?.countries);
+
   return (
-    <Box
+    <VStack
+      spacing={4}
+      align="stretch"
       border="1px"
       p={4}
       mb={4}
@@ -21,19 +24,16 @@ const AddressCard = ({ addrData }) => {
         Address Details
       </Text>
       {addrData && (
-        <VStack align="flex-start" spacing={2} pt={2}>
+        <>
           <Text fontSize="md">{`Street: ${addrData.street_address}`}</Text>
           <Text fontSize="md">{`Country: ${
             CountryList && CountryList.data[addrData.country]
           }`}</Text>
           <Text fontSize="md">{`Zip: ${addrData.zip}`}</Text>
           <Text fontSize="md">{`Default: ${addrData.default_addr}`}</Text>
-          <Button size="sm" colorScheme="blue" mt={2}>
-            Update Address
-          </Button>
-        </VStack>
+        </>
       )}
-    </Box>
+    </VStack>
   );
 };
 
