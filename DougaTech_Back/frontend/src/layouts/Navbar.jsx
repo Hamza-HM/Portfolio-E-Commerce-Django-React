@@ -1,16 +1,8 @@
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
-  Text,
   IconButton,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
@@ -19,15 +11,15 @@ import {
 import {
   HamburgerIcon,
   CloseIcon,
-  AddIcon,
   MoonIcon,
   SunIcon,
 } from "@chakra-ui/icons";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/auth";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 const links = [
   { name: "Home", link: "/" },
@@ -41,8 +33,11 @@ const authLinks = [
   { name: "Signup", link: "/signup" },
 ];
 
-const NavLink = (props) => {
-  const { children, path } = props; // Destructure 'path' from props
+const NavLink = React.memo(({ children, path, onClick }) => {
+  const handleClick = useCallback(() => {
+    onClick(); // Call the onClick function passed from WithAction component
+  }, [onClick]);
+
   return (
     <Link
       px={2}
@@ -52,14 +47,15 @@ const NavLink = (props) => {
         textDecoration: "none",
         bg: useColorModeValue("gray.600", "gray.700"),
       }}
+      onClick={handleClick}
       to={path} // Use 'href' for anchor tag
     >
       {children}
     </Link>
   );
-};
+});
 
-const WithAction = ({ cart }) => {
+const WithAction = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [quantity, setQuantity] = useState(0);
@@ -67,15 +63,17 @@ const WithAction = ({ cart }) => {
   const dispatch = useDispatch();
 
   const { isAuthenticated } = useSelector((state) => state?.auth);
-  const order_items = cart.shoppingCart?.order_items
+  const order_items = useSelector(state => state.cart.shoppingCart?.order_items)
 
   const handleCalculateQuantity = () => {
-    if (order_items) {
+    if (order_items && order_items.length > 0) {
       const totalQuantity = order_items.reduce(
         (acc, item) => acc + item.quantity,
         0
       );
       setQuantity(totalQuantity);
+    } else {
+      setQuantity('0');
     }
   };
 
@@ -111,7 +109,9 @@ const WithAction = ({ cart }) => {
             >
               {/* Iterate over 'links' array and render NavLink for each link */}
               {links.map((link) => (
-                <NavLink key={link.name} path={link.link}>
+                <NavLink 
+                onClick={onClose}
+                key={link.name} path={link.link}>
                   {link.name}
                 </NavLink>
               ))}
@@ -128,7 +128,7 @@ const WithAction = ({ cart }) => {
             {isAuthenticated ? (
               <>
             <Box display='flex' alignItems='center'>
-            {quantity > 0 && ( // Display quantity only if it's greater than 0
+            {quantity && ( // Display quantity only if it's greater than 0
               <Box
               
                 position="relative "

@@ -122,7 +122,7 @@ export const updateItemCartQuantity = createAsyncThunk(
 
 export const makePay = createAsyncThunk(
   "products/makePay",
-  async ({ token, billing, shipping }, { dispatch }) => {
+  async ({ token }, { dispatch }) => {
     if (localStorage.getItem("access")) {
       const config = {
         headers: {
@@ -134,20 +134,18 @@ export const makePay = createAsyncThunk(
       };
       const body = {
         stripeToken: token.id,
-        billing,
-        shipping,
       };
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_PAYMENT}`,
+          `${import.meta.env.VITE_API_PAYMENT_URL}`,
           body,
           config
         );
-        console.log("cart checkout response: ", response.data);
-        dispatch(paymentSuccess(response.data));
+        dispatch(paymentSuccess(response.data.message));
+        dispatch(fetchCart());
+        
       } catch (error) {
-        dispatch(paymentFail(error.response.data.message));
-        // console.log("cart checkout error: ", error)
+        console.log("cart checkout error: ", error)
       }
     } else {
       dispatch(paymentFail("you must be authenticated!"));

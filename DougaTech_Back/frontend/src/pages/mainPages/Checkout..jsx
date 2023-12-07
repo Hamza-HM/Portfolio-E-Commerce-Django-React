@@ -17,7 +17,7 @@ const Checkout = () => {
   const { isAuthenticated } = useSelector((state) => state?.auth);
 
   const stripePromise = loadStripe(
-    "pk_test_51NnmFBBeVuYrOQ5OZ8WLFbmyUplR04WN4MriMwnIDc9PlvuNMFpEjH2blD9hc9UNPJSphr1gByBhQQak7AGJnVcc00nKqAHQJc"
+    "pk_test_51NnmFBBeVuYrOQ5ODutL5KZNQ0VRDFMeCM1czYU3C5D0ZApYKjDBKpda3Eg6hSllE2uF66NP6Emnyz5avKxhebNA00M2rnz7Zi"
   );
 
   // Function to handle placing the order

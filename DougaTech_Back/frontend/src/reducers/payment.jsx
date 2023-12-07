@@ -25,9 +25,9 @@ const paymentSlice = createSlice({
             state.error = false;
         },
         paymentFail: (state, action) => {
-        state.detail = action.payload;
-        state.success = true;
-        state.error = false;
+        state.payments.errorMessage = action.payload;
+        state.success = false;
+        state.error = true;
         },
         couponAddedSuccess: (state) => {
             state.coupon.coupon = true;
@@ -42,12 +42,13 @@ const paymentSlice = createSlice({
             state.payments.data = action.payload;
             state.payments.error = false;
         },
-        paymentListedFail: (state, action) => {
+        paymentListedFail: (state) => {
             state.payments.data = [];
             state.payments.errorMessage = false;
             state.payments.error = true;
 
         },
+        paymentResetFields: () => initialState,
 
     }
 });
@@ -58,7 +59,8 @@ export const {
     couponAddedSuccess,
     couponAddedFail,
     paymentListedSuccess,
-    paymentListedFail
+    paymentListedFail,
+    paymentResetFields
 } = paymentSlice.actions
 
 export default paymentSlice.reducer

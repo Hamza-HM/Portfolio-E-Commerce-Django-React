@@ -6,8 +6,7 @@ import { checkAuthenticated } from "../actions/auth";
 import { fetchCart } from "../actions/cart";
 import { useSelector } from "react-redux";
 import { load_user } from "../actions/profile";
-import { useNavigate } from "react-router-dom";
-
+import { Spinner, Box } from "@chakra-ui/react";
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state?.cart);
@@ -25,7 +24,17 @@ const Layout = ({ children }) => {
   }, [dispatch, isAuthenticated]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box textAlign='center' w='100%' mt='10'>
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        emptyColor="gray.200"
+        color="blue.500"
+        size="xl"
+        />
+        </Box>
+    );
   }
 
   return (
