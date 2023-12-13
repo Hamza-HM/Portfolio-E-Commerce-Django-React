@@ -40,7 +40,7 @@ const Layout = ({ children }) => {
   return (
     <div>
       {/* Render content only when not loading */}
-      {children && !loading && <Navbar cart={cart} />}
+      {children && !loading && <Navbar cart={cart}/>}
       {children && !loading && children}
       {children && !loading && <Footer />}
     </div>

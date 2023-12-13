@@ -49,7 +49,7 @@ const Profile = () => {
 
 
   return (
-    <HStack spacing={0} justify="center">
+    <HStack spacing={0} justify="center" pt='55px'>
       <VStack flex="1" align="stretch" p={4}>
         <Text fontSize="lg" fontWeight="bold" textAlign="center">
           Links

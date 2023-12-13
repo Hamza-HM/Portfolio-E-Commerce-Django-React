@@ -82,7 +82,7 @@ const Login = () => {
   }, [isAuthenticated]);
 
   return (
-    <Center>
+    <Center pt='55px' h='90vh'>
       <Box
         maxW="500px"
         w="full"

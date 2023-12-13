@@ -38,7 +38,8 @@ const Checkout = () => {
         color="white"
         py={20}
         textAlign="center"
-      >
+        
+        >
         {/* Hero Section */}
         <Heading as="h1" mb={4} fontSize="4xl">
           Checkout Now

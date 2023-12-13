@@ -94,7 +94,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+    <Grid templateColumns="repeat(2, 1fr)" gap={6} pt='55px' px='10px'>
       <GridItem colSpan={1}>
         <Box maxW="400px">
           <Image src={selectedImage || image} alt="Product" />

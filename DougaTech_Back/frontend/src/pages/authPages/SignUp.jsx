@@ -100,9 +100,10 @@ const SignUp = () => {
   }, [isAuthenticated]);
 
   return (
-    <Center>
+    <Center pt='55px' h='90vh'>
       <Box
         maxW="500px"
+        h='100%'
         w="full"
         p={5}
         className={colorMode === "light" ? "mdx-prose" : ""}

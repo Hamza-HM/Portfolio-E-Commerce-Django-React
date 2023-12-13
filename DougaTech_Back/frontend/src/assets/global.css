@@ -1,0 +1,24 @@
+*, ::after, ::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Navbar START */
+
+.nav-link {
+}
+.nav-link:hover {
+    color: rgb(151, 151, 151);
+    transition: color .2s ease-in-out;
+}
+/* Navbar END */
+.transition {
+    background-color: red;
+    transition:  1s ease-in-out;
+}
+
+.active{
+    color: rgb(51, 154, 239);
+}

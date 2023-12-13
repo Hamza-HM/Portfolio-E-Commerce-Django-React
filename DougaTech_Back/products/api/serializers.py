@@ -45,6 +45,7 @@ class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()  # Use the CategorySerializer directly
     label = LabelSerializer()  # Use the LabelSerializer directly
     discount_price = serializers.SerializerMethodField()
+    variations = serializers.SerializerMethodField()
     class Meta:
         model = Item
         fields = [
@@ -55,6 +56,7 @@ class ItemSerializer(serializers.ModelSerializer):
             'category',
             'label',
             'slug',
+            'variations',
             'description',
             'image'
         ]
@@ -62,6 +64,8 @@ class ItemSerializer(serializers.ModelSerializer):
         if obj.discount_price:
             return float(obj.price) * float(obj.discount_price)
         return 0.0
+    def get_variations(self, obj):
+        return VariationDetailSerializer(obj.variations.all(), many=True).data
 
 
 class VariationDetailSerializer(serializers.ModelSerializer):
