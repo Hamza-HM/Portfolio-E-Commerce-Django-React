@@ -31,17 +31,19 @@
 }
 
 .image-parallax {
-    height: 150vh;
-    width: 100%;
-    background-image: url(../../public/100.jpg);
+    background-image: url(/public/100.jpg);
     position: absolute;
+    background-size: cover;
+    background-position: bottom;
     inset: 0;
+    z-index: -1;
 }
 
 .heading-parallax {
     z-index: 1;
-    font-family:Georgia, 'Times New Roman', Times, serif;
-    font-size: 200px;
+    font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+    font-size: 150px !important;
+    font-weight: 700;
 }
 
 @media (max-width: 1200px) {

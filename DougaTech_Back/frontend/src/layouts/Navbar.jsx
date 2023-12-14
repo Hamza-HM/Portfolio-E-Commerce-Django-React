@@ -64,7 +64,22 @@ const WithAction = () => {
   const order_items = useSelector(
     (state) => state.cart.shoppingCart?.order_items
   );
+  const [scrollDirection, setScrollDirection] = useState(null)
+  useEffect(() => {
+    const handleScroll = () => {
+      let currentScroll = window.scrollY
+      if (currentScroll > scrollPos) setScrollDirection('down')
+      if (currentScroll < scrollPos) setScrollDirection('up')
+      scrollPos = currentScroll
+  }
+  let scrollPos = window.scrollY
+  window.addEventListener('scroll', handleScroll)
+  return () => {
+    window.removeEventListener('scroll', handleScroll)
+  }
 
+  }, [])
+  
   const handleCalculateQuantity = () => {
     if (order_items && order_items.length > 0) {
       const totalQuantity = order_items.reduce(
@@ -95,11 +110,11 @@ const WithAction = () => {
         top="0"
         w="100%"
         style={{
-          transition: "height 0.3s ease-in-out", // Transition property
-          height: isOpen ? "260px" : "45px", // Adjusted height based on isOpen
+          transition: "height 0.3s ease-in-out, transform .3s ease-in-out",
+          transform: scrollDirection === 'down' ?'translateY(-52px)': 'translateY(0)',
+          height: isOpen ? "260px" : "45px",
         }}
-        // h={isOpen ? "260px" : "45px"}
-        // transition="height .4s ease-in-out"
+
       >
         <Flex h={12} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
