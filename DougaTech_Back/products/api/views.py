@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 import stripe
 
 from django.utils import timezone
@@ -31,6 +32,7 @@ from ..models import (
 )
 from users.models import UserProfile, Address
 
+stripe.api_key = settings.STRIP_TEST_SECRET_KEY
 class ItemView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     permission_classes = [AllowAny]
     queryset = Item.objects.all()
@@ -183,12 +185,11 @@ class PaymentView(APIView):
 
   def post(self, request, *args, **kwargs):
       order = Order.objects.select_related('user').get(user=self.request.user, ordered=False)
+      addresses = Address.objects.filter(user=self.request.user)
       userprofile = order.user.profile
       token = request.data.get('stripeToken')
-      selected_billing_id = request.data.get("billing")
-      selected_shipping_id = request.data.get("shipping")
-      billing_address = Address.objects.filter(id=selected_billing_id)
-      shipping_address = Address.objects.filter(id=selected_shipping_id)
+      billing_address = addresses.filter(address_type='B')
+      shipping_address = addresses.filter(address_type='S')
       if token:
           payment_method = stripe.PaymentMethod.create(
               type="card",
@@ -261,6 +262,7 @@ class PaymentView(APIView):
           return Response({"message": "Something went wrong. You were not charged. Please try again."}, status.HTTP_400_BAD_REQUEST)
 
       except Exception as e:
+          print(e,'DOUUUUUGAAAAAAAAAAAAA')
           return Response({"message": "A serious error occurred. We have been notified."}, status.HTTP_400_BAD_REQUEST)
 
 

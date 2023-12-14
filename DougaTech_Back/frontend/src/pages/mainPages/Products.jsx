@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Center, Grid, GridItem } from "@chakra-ui/react";
+import { Button, Center, Grid, GridItem, Box } from "@chakra-ui/react";
 import ProductCard from "../../layouts/ProductCard";
 import { loadProducts } from "../../actions/products";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,12 +30,13 @@ const Products = () => {
 
   return (
     <>
-      <Center>
+      <Center pt={10}>
         <Grid
           templateColumns={{
             base: "1fr",
             md: "repeat(2, 1fr)",
             lg: "repeat(3, 1fr)",
+            xl: "repeat(4, 1fr)",
           }}
           gap={5}
           p={5}
@@ -53,6 +54,7 @@ const Products = () => {
                   image={product.image}
                   description={product.description}
                   price={product.price}
+                  variationsExist={product.variations ? true : false}
                 />
               </GridItem>
             ))}

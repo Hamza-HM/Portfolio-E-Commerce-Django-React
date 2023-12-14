@@ -19,6 +19,8 @@ import ProductDetail from "./pages/mainPages/ProductDetail";
 import OrderSummary from "./pages/mainPages/OrderSummary";
 import Checkout from "./pages/mainPages/Checkout.";
 
+import './assets/global.css'
+import About from "./pages/mainPages/About";
 const App = () => {
   return (
     <Provider store={store}>
@@ -43,7 +45,7 @@ const App = () => {
             <Route exact path="/products/:id" element={<ProductDetail />} />
             <Route exact path="/cart" element={<OrderSummary />} />
             <Route exact path="/checkout" element={<Checkout />} />
-            <Route exact path="/list" element={<List />} />
+            <Route exact path="/about" element={<About />} />
           </Routes>
         </Layout>
       </Router>

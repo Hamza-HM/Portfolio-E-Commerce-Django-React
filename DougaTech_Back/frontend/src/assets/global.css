@@ -1,0 +1,52 @@
+*, ::after, ::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Navbar START */
+
+.nav-link {
+}
+.nav-link:hover {
+    color: rgb(151, 151, 151);
+    transition: color .2s ease-in-out;
+}
+/* Navbar END */
+.noFade {
+    opacity: 0;
+}
+.fade {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+}
+
+.active{
+    color: rgb(51, 154, 239);
+}
+
+.image-parallax {
+    height: 150vh;
+    width: 100%;
+    background-image: url(../../public/100.jpg);
+    position: absolute;
+    inset: 0;
+}
+
+.heading-parallax {
+    z-index: 1;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: 200px;
+}
+
+@media (max-width: 1200px) {
+    .heading-parallax {
+        padding-top: 50px;
+        font-size: 100px;
+    }
+}

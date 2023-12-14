@@ -87,7 +87,7 @@ const OrderSummary = () => {
   }, []);
 
   return (
-    <Center>
+    <Center pt='55px'>
       <Box my="5">
         <Heading my="5" fontSize="lg" textAlign="center">
           Order Summary
