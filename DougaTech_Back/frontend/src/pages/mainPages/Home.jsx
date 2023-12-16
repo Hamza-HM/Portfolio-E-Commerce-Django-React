@@ -2,74 +2,25 @@ import {
   Box,
   Text,
   VStack,
+  useColorMode
 } from '@chakra-ui/react'
-import Hero from '../../layouts/Hero'
+import Hero from '../../layouts/homepage/Hero'
+import Feature from '../../layouts/homepage/Feature'
+import WebSection from '../../layouts/homepage/WebSection'
+import Sponsores from '../../layouts/homepage/Sponsores'
+import DesignSection from '../../layouts/homepage/DesignSection'
 
 const Home = () => {
+  const {colorMode} = useColorMode();
+  const textColor = { light: "gray.300", dark: "gray.200" };
   return (
-    <>
+    <Box color={textColor[colorMode]}>
     <Hero />
-    <Box w="100%" display="flex" justifyContent="center">
-        <VStack
-          pt="20px"
-          zIndex="1"
-          w="1000px"
-          spacing={20}
-          maxW="800px"
-          display="flex"
-          justifyContent="center"
-        >
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-            blanditiis eligendi accusamus aspernatur voluptatem non
-            exercitationem delectus incidunt id, et ut nihil excepturi dolor
-            velit adipisci, dicta harum similique totam? exercitationem delectus
-            incidunt id, et ut nihil excepturi dolor velit adipisci, dicta harum
-            similique totam?
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-            blanditiis eligendi accusamus aspernatur voluptatem non
-            exercitationem delectus incidunt id, et ut nihil excepturi dolor
-            velit adipisci, dicta harum similique totam? exercitationem delectus
-            incidunt id, et ut nihil excepturi dolor velit adipisci, dicta harum
-            similique totam?
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-            blanditiis eligendi accusamus aspernatur voluptatem non
-            exercitationem delectus incidunt id, et ut nihil excepturi dolor
-            velit adipisci, dicta harum similique totam? exercitationem delectus
-            incidunt id, et ut nihil excepturi dolor velit adipisci, dicta harum
-            similique totam?
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-            blanditiis eligendi accusamus aspernatur voluptatem non
-            exercitationem delectus incidunt id, et ut nihil excepturi dolor
-            velit adipisci, dicta harum similique totam? exercitationem delectus
-            incidunt id, et ut nihil excepturi dolor velit adipisci, dicta harum
-            similique totam?
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-            blanditiis eligendi accusamus aspernatur voluptatem non
-            exercitationem delectus incidunt id, et ut nihil excepturi dolor
-            velit adipisci, dicta harum similique totam? exercitationem delectus
-            incidunt id, et ut nihil excepturi dolor velit adipisci, dicta harum
-            similique totam?
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-            blanditiis eligendi accusamus aspernatur voluptatem non
-            exercitationem delectus incidunt id, et ut nihil excepturi dolor
-            velit adipisci, dicta harum similique totam? exercitationem delectus
-            incidunt id, et ut nihil excepturi dolor velit adipisci, dicta harum
-            similique totam?
-          </Text>
-        </VStack>
-      </Box>
-    </>
+    <Feature />
+    <WebSection />
+    <Sponsores />
+    <DesignSection />
+    </Box>
   )
 }
 

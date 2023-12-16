@@ -1,22 +1,24 @@
+/* Reset and basic styling */
 *, ::after, ::before {
-    margin: 0;
     padding: 0;
+    margin: 0;
     box-sizing: border-box;
 }
 
-
-/* Navbar START */
-
+/* Navbar */
 .nav-link {
 }
+
 .nav-link:hover {
     color: rgb(151, 151, 151);
     transition: color .2s ease-in-out;
 }
-/* Navbar END */
+
+/* Classes for animations */
 .noFade {
     opacity: 0;
 }
+
 .fade {
     opacity: 1;
     transition: opacity 1s ease-in-out;
@@ -26,10 +28,11 @@
     -o-transition: opacity 1s ease-in-out;
 }
 
-.active{
+.active {
     color: rgb(51, 154, 239);
 }
 
+/* Parallax effect */
 .image-parallax {
     background-image: url(/public/100.jpg);
     position: absolute;
@@ -37,18 +40,35 @@
     background-position: bottom;
     inset: 0;
     z-index: -1;
+    overflow: hidden;
 }
 
+/* Heading style */
 .heading-parallax {
     z-index: 1;
-    font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
-    font-size: 150px !important;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    font-size: 150px;
     font-weight: 700;
+    letter-spacing: 10px;
 }
 
+.border-rounded {
+    border-radius: 20px;
+}
+
+/* Responsive font size for smaller screens */
 @media (max-width: 1200px) {
     .heading-parallax {
         padding-top: 50px;
         font-size: 100px;
     }
 }
+
+/* Additional media queries for other screen sizes if needed */
+@media (max-width: 768px) {
+    .heading-parallax {
+        font-size: 50px;
+    }
+}
+
+/* Add more media queries as required */
