@@ -65,12 +65,12 @@ const Products = () => {
             ))}
         </Grid>
       </Center>
-      <Center>
+      <Center gap='5px'>
         <Button onClick={handlePrevPage} disabled={!links?.previous}>
-          Previous Page
+        {'<'}
         </Button>
         <Button onClick={handleNextPage} disabled={!links?.next}>
-          Next Page
+          {'>'}
         </Button>
       </Center>
     </>

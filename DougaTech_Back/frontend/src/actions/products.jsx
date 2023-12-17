@@ -2,6 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getCookie } from "../urils/cookieUtil";
 
+
+
 import {
   productsLoadedSuccess,
   productsLoadedFail,
@@ -11,6 +13,7 @@ import {
   productAddedToCartFail,
 } from "../reducers/products";
 import { fetchCart } from "./cart";
+
 // import { fetchCart } from "./cart";
 
 export const loadProducts = createAsyncThunk(
@@ -58,6 +61,7 @@ export const loadProduct = createAsyncThunk(
 export const addToCart = createAsyncThunk(
   "products/addToCart",
   async ({ slug, variations }, { dispatch }) => {
+    if (!isAuthenticated) navigate('/login')
     if (localStorage.getItem("access")) {
       const config = {
         headers: {

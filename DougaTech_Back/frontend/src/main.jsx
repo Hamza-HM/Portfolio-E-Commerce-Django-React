@@ -1,16 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import App from "./App.jsx";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { CgColorBucket } from "react-icons/cg";
 
 const theme = extendTheme({
   fonts: {
-    // body: 'Montserrat, sans-serif',
-    // heading: 'Poppins, sans-serif',
-    body: 'Poppins, sans-serif'
+    body: 'Poppins, sans-serif',
   },
   styles: {
     global: {
+      // body: {bg:'red' },
       ".mdx-prose": {
         input: {
           bg: "white",

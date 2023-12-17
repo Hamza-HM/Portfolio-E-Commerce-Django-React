@@ -16,7 +16,8 @@ import {
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../actions/products";
-import { color } from "framer-motion";
+import {useSelector} from 'react-redux'
+
 const ProductCard = ({
   id,
   name,
@@ -29,11 +30,13 @@ const ProductCard = ({
   variationsExist,
   slug,
 }) => {
+  const {isAuthenticated} = useSelector(state => state.auth)
   const hasDiscount = discountPrice && discountPrice < price;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) navigate('/login')
     dispatch(addToCart({ slug, variations: [] }));
   };
   const { colorMode } = useColorMode();

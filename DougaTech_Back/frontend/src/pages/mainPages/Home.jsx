@@ -4,8 +4,8 @@ import Feature from "../../layouts/home page/Feature";
 import WebSection from "../../layouts/home page/WebSection";
 import Sponsores from "../../layouts/home page/Sponsores";
 import DesignSection from "../../layouts/home page/DesignSection";
-import NewsLetter from "../../layouts/home page/NewsLetter";
 import AdvertisingSection from "../../layouts/home page/AdvertisingSection";
+import NewsLetter from "../../layouts/home page/NewsLetter";
 
 const Home = () => {
   const { colorMode } = useColorMode();

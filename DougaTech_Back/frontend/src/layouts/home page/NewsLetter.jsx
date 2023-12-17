@@ -21,9 +21,11 @@ const NewsLetter = () => {
     email: Yup.string().required("Enter email please!").email("Invalid email"),
   });
 
-  const handleSubmit = (values, actions) => {
+  const handleSubmit = (values, {setSubmitting, resetForm}) => {
     // Handle form submission logic here
     console.log(values); // For example, you can log the form values
+    resetForm();
+    setSubmitting(false);
   };
 
   return (

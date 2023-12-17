@@ -51,11 +51,11 @@ const VariationsForm = ({ variations, slug, handleAddToCart }) => {
           {variations.map((variation) => (
             <Box key={variation.id}>
               <Divider my="4" />
-              <Heading size="md">{variation.name}:</Heading>
               <Stack spacing="4">
                 <Field name={variation.id}>
                   {({ field, form }) => (
                     <FormControl
+                    isRequired
                       isInvalid={
                         form.errors[variation.id] && form.touched[variation.id]
                       }
@@ -82,7 +82,7 @@ const VariationsForm = ({ variations, slug, handleAddToCart }) => {
           ))}
           <Divider my="4" />
 
-          <Stack direction="row" spacing={4}>
+          <Stack direction="row" spacing={4} w=''>
             <Button type="submit" variant="solid" colorScheme="blue">
               Add to Cart
             </Button>
