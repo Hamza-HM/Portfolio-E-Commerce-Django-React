@@ -32,9 +32,8 @@
     color: rgb(51, 154, 239);
 }
 
-/* Parallax effect */
 .image-parallax {
-    background-image: url(/public/100.jpg);
+    background-image: url(/100.jpg);
     position: absolute;
     background-size: cover;
     background-position: bottom;

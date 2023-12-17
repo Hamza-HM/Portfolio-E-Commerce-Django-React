@@ -54,7 +54,12 @@ const Products = () => {
                   image={product.image}
                   description={product.description}
                   price={product.price}
-                  variationsExist={product.variations ? true : false}
+                  variationsExist={
+                    product.variations && product.variations.length > 0
+                      ? true
+                      : false
+                  }
+                  slug={product.slug}
                 />
               </GridItem>
             ))}

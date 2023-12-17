@@ -20,13 +20,12 @@ import { useParams } from "react-router-dom";
 import VariationsForm from "../../layouts/VariationsForm";
 
 import { fetchCart } from "../../actions/cart";
+import ProductHero from "../../layouts/products page/ProductHero";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const product = useSelector((state) => state.products.productDetail?.product);
-  const { isAuthenticated } = useSelector(
-    (state) => state?.auth
-  );
+  const { isAuthenticated } = useSelector((state) => state?.auth);
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState("");
   const handleImageClick = (image) => {
@@ -72,85 +71,85 @@ const ProductDetail = () => {
       return (
         <>
           <Divider my="4" />
-          <Stack direction="row" spacing={4}>
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </Button>
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              onClick={handleFetchCart}
-            >
-              Buy Now
-            </Button>
-          </Stack>
+          <Button
+            w="full"
+            variant="solid"
+            colorScheme="blue"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </Button>
         </>
       );
     }
   };
 
   return (
-    <Grid templateColumns="repeat(2, 1fr)" gap={6} pt='55px' px='10px'>
-      <GridItem colSpan={1}>
-        <Box maxW="400px">
-          <Image src={selectedImage || image} alt="Product" />
-          <Stack spacing={4} mt={4}>
-            {images &&
-              images.map((img) => (
-                <Image
-                  key={img}
-                  src={img}
-                  alt="Product Thumbnail"
-                  boxSize="50px"
-                  onClick={() => handleImageClick(img)}
-                  cursor="pointer"
-                  borderRadius="md"
-                  boxShadow="md"
-                />
-              ))}
-          </Stack>
-        </Box>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Box
-          maxW="600px"
-          p="4"
-          borderWidth="1px"
-          borderRadius="lg"
-          boxShadow="lg"
-        >
-          <Stack spacing="4">
-            <Heading size="lg">{title}</Heading>
-            <HStack>
-              {hasDiscount ? (
-                <>
-                  <Text fontSize="2xl" textDecoration="line-through" mr="2">
-                    ${price}
-                  </Text>
-                  <Text fontSize="2xl">${price - price * discount_price}</Text>
-                </>
-              ) : (
-                <Text fontSize="2xl">${price}</Text>
-              )}
-            </HStack>
-            <Text fontSize="md" color="gray.600">
-              Category: {category}
-            </Text>
-            <Text fontSize="md" color="gray.600">
-              Label: {label}
-            </Text>
-            S
-            <Divider />
-            <Text fontSize="md">{description}</Text>
-          </Stack>
-          {renderWithOrWithoutVariations()}
-        </Box>
-      </GridItem>
-    </Grid>
+    <>
+      <ProductHero />
+      <Grid
+        templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+        gap={6}
+        py="100px"
+        px="10px"
+      >
+        <GridItem colSpan={{ base: "auto", md: 2 }}>
+          <Box>
+            <Image
+              src={selectedImage || image}
+              alt="Product"
+              borderRadius="md"
+            />
+            <Stack spacing={4} mt={4}>
+              {images &&
+                images.map((img) => (
+                  <Image
+                    key={img}
+                    src={img}
+                    alt="Product Thumbnail"
+                    boxSize="50px"
+                    onClick={() => handleImageClick(img)}
+                    cursor="pointer"
+                    borderRadius="md"
+                    boxShadow="md"
+                  />
+                ))}
+            </Stack>
+          </Box>
+        </GridItem>
+        <GridItem colSpan="auto">
+          <Box p="4" borderWidth="1px" borderRadius="lg" boxShadow="lg">
+            <Stack spacing="4">
+              <Heading size="lg">{title}</Heading>
+              <HStack>
+                {hasDiscount ? (
+                  <>
+                    <Text fontSize="2xl" textDecoration="line-through" mr="2">
+                      ${price}
+                    </Text>
+                    <Text fontSize="2xl">
+                      ${price - price * discount_price}
+                    </Text>
+                  </>
+                ) : (
+                  <Text fontSize="2xl">${price}</Text>
+                )}
+              </HStack>
+              <Text fontSize="md" color="gray.600">
+                Category: {category}
+              </Text>
+              <Text fontSize="md" color="gray.600">
+                Label: {label}
+              </Text>
+              S
+              <Divider />
+              <Text fontSize="md">{description}</Text>
+            </Stack>
+            {renderWithOrWithoutVariations()}
+          </Box>
+        </GridItem>
+      </Grid>
+    </>
   );
 };
 

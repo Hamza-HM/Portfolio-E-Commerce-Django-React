@@ -21,10 +21,7 @@ const Home = () => {
         justifyContent="center"
         overflow="hidden"
       >
-        <motion.h1
-          style={{ y: textY }}
-          className="heading-parallax"
-        >
+        <motion.h1 style={{ y: textY }} className="heading-parallax">
           Parallax
         </motion.h1>
         <motion.div
@@ -35,7 +32,7 @@ const Home = () => {
           position="absolute"
           inset={0}
           zIndex={1}
-          backgroundImage={"url(/public/0.png)"}
+          backgroundImage={"url(/0.png)"}
           backgroundSize="cover"
           backgroundPosition="bottom"
         ></Box>

@@ -64,22 +64,21 @@ const WithAction = () => {
   const order_items = useSelector(
     (state) => state.cart.shoppingCart?.order_items
   );
-  const [scrollDirection, setScrollDirection] = useState(null)
+  const [scrollDirection, setScrollDirection] = useState(null);
   useEffect(() => {
     const handleScroll = () => {
-      let currentScroll = window.scrollY
-      if (currentScroll > scrollPos) setScrollDirection('down')
-      if (currentScroll < scrollPos) setScrollDirection('up')
-      scrollPos = currentScroll
-  }
-  let scrollPos = window.scrollY
-  window.addEventListener('scroll', handleScroll)
-  return () => {
-    window.removeEventListener('scroll', handleScroll)
-  }
+      let currentScroll = window.scrollY;
+      if (currentScroll > scrollPos) setScrollDirection("down");
+      if (currentScroll < scrollPos) setScrollDirection("up");
+      scrollPos = currentScroll;
+    };
+    let scrollPos = window.scrollY;
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-  }, [])
-  
   const handleCalculateQuantity = () => {
     if (order_items && order_items.length > 0) {
       const totalQuantity = order_items.reduce(
@@ -111,10 +110,10 @@ const WithAction = () => {
         w="100%"
         style={{
           transition: "height 0.3s ease-in-out, transform .3s ease-in-out",
-          transform: scrollDirection === 'down' ?'translateY(-52px)': 'translateY(0)',
+          transform:
+            scrollDirection === "down" ? "translateY(-52px)" : "translateY(0)",
           height: isOpen ? "260px" : "45px",
         }}
-
       >
         <Flex h={12} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
@@ -202,30 +201,32 @@ const WithAction = () => {
           </HStack>
         </Flex>
         {/* Mobile */}
-        <Box p={5} className={`${isOpen ? "fade" : "noFade"}`}>
-          <Stack as={"nav"} spacing={6}>
-            {links.map((link) => (
-              <>
-                <NavLink
-                  className="douga"
-                  key={link.name}
-                  onClick={onClose}
-                  path={link.link}
-                  name={link.name}
-                >
-                  {link.name}
-                </NavLink>
-              </>
-            ))}
-            {isAuthenticated ? (
-              <NavLink to="/" onClick={handleLogout} aria-label="Logout">
-                Logout
-              </NavLink>
-            ) : (
-              <></>
-            )}
-          </Stack>
-        </Box>
+        {isOpen && (
+          <ScaleFade in={isOpen} initialScale={0.8} delay={0.2}>
+            <Box p={5}>
+              <Stack as={"nav"} spacing={6}>
+                {links.map((link) => (
+                  <NavLink
+                    className="douga"
+                    key={link.name}
+                    onClick={onClose}
+                    path={link.link}
+                    name={link.name}
+                  >
+                    {link.name}
+                  </NavLink>
+                ))}
+                {isAuthenticated ? (
+                  <NavLink to="/" onClick={handleLogout} aria-label="Logout">
+                    Logout
+                  </NavLink>
+                ) : (
+                  <></>
+                )}
+              </Stack>
+            </Box>
+          </ScaleFade>
+        )}
       </Box>
     </Box>
   );

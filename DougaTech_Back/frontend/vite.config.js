@@ -1,13 +1,9 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import chakraUiPlugin from "@chakra-ui/vite-plugin";
+// import chakraUiPlugin from "@chakra-ui/vite-plugin";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    chakraUiPlugin(), // Add Chakra UI Vite plugin
-  ],
+  plugins: [react()],
   server: {
     watch: {
       usePolling: true,
@@ -15,5 +11,4 @@ export default defineConfig({
   },
   // other configurations...
   // base: "/static/",
-
 });

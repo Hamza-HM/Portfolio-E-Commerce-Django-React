@@ -35,9 +35,15 @@ const NewsLetter = () => {
         width="100%"
         maxWidth="100%" // Adjust as needed
         marginX="auto"
+        h="20vh"
+        bg="url(https://images.pexels.com/photos/1591062/pexels-photo-1591062.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)"
+        backgroundSize="cover"
+        backgroundPosition="bottom"
       >
         <Box textAlign="center" flexBasis={{ base: "100%", md: "50%" }}>
-          <Heading>Newsletter</Heading>
+          <Heading backdropFilter="blur(5px)" color="white">
+            Newsletter
+          </Heading>
         </Box>
         <Flex
           justifyContent="center"
@@ -50,19 +56,25 @@ const NewsLetter = () => {
             onSubmit={handleSubmit}
           >
             {({ isSubmitting }) => (
-              <Form style={{ display: "flex" }}>
+              <Form
+                style={{
+                  display: "flex",
+                  gap: "5px",
+                  backdropFilter: "blur(10px)",
+                }}
+              >
                 <Field name="email">
                   {({ field, form }) => (
                     <FormControl
                       isRequired
                       isInvalid={form.errors.email && form.touched.email}
-                      marginBottom="1rem"
                     >
                       <Input
                         {...field}
                         type="email"
                         aria-label="Email"
                         placeholder="Email"
+                        _placeholder={{ color: "white" }}
                       />
                       {/* <FormErrorMessage>{form.errors.email}</FormErrorMessage> */}
                     </FormControl>
