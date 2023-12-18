@@ -5,18 +5,33 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { CgColorBucket } from "react-icons/cg";
 
 const theme = extendTheme({
+  components: {
+    Button: {
+      variants: {
+        solid: (props) => ({
+          // bg: props.colorMode === "dark" ? "gray.800" : "blue",
+          // color: props.colorMode === "dark" ? "white" : "white",
+        }),
+      },
+    },
+  },
   fonts: {
-    body: 'Poppins, sans-serif',
+    body: "Poppins, sans-serif",
   },
   styles: {
-    global: {
-      // body: {bg:'red' },
+    global: (props) => ({
       ".mdx-prose": {
         input: {
           bg: "white",
         },
       },
-    },
+      body: {
+        bg: props.colorMode === "dark" ? "gray.800" : "white",
+      },
+      footer: {
+        bg: props.colorMode === "dark" ? "gray.800" : "white",
+      },
+    }),
   },
 });
 

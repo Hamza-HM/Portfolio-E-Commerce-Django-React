@@ -9,6 +9,7 @@ const Footer = () => {
   return (
     <>
       <Box
+        as="footer"
         py={6}
         bg={bgColor[colorMode]}
         display="grid"
@@ -23,9 +24,7 @@ const Footer = () => {
           spacing={5}
           pt="5px"
         >
-          <Heading>
-            Douga
-          </Heading>
+          <Heading>Douga</Heading>
           <Link to="/">some address street stuff number</Link>
           <Link to="/products">Algeria, Blida/Oran</Link>
           <Link to="/about">location</Link>
@@ -37,9 +36,7 @@ const Footer = () => {
           spacing={5}
           pt="5px"
         >
-          <Heading>
-            Pages
-          </Heading>
+          <Heading>Pages</Heading>
           <Link to="/">Home</Link>
           <Link to="/products">Products</Link>
           <Link to="/about">About</Link>
@@ -51,9 +48,7 @@ const Footer = () => {
           spacing={5}
           pt="5px"
         >
-          <Heading>
-            Contact Us
-          </Heading>
+          <Heading>Contact Us</Heading>
           <Link to="/">+213 654 789 21</Link>
           <Link to="/products">Facebook</Link>
           <Link to="/about">Instagram</Link>
