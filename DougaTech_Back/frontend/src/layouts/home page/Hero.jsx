@@ -21,7 +21,7 @@ const Home = () => {
         justifyContent="center"
         overflow="hidden"
       >
-        <motion.h1 style={{ y: textY }} className="heading-parallax">
+        <motion.h1 style={{ y: textY, color: 'white' }} className="heading-parallax">
           Parallax
         </motion.h1>
         <motion.div

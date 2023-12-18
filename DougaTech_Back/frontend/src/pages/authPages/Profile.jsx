@@ -3,7 +3,7 @@ import {
   Center,
   Divider,
   Grid,
-  HStack,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -49,11 +49,8 @@ const Profile = () => {
 
 
   return (
-    <HStack spacing={0} justify="center" pt='55px'>
-      <VStack flex="1" align="stretch" p={4}>
-        <Text fontSize="lg" fontWeight="bold" textAlign="center">
-          Links
-        </Text>
+    <Stack spacing={0} direction={{base: 'column', md: 'row'}} justify="center" pt='55px'>
+      <VStack flex="1" align="stretch" p={4} >
         <Grid align="stretch" gap={5}>
           {profileLinks.map((link) => {
             return (
@@ -119,7 +116,7 @@ const Profile = () => {
           </Text>
         </VStack>
       )}
-    </HStack>
+    </Stack>
   );
 };
 

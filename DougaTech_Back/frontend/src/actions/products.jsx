@@ -61,7 +61,6 @@ export const loadProduct = createAsyncThunk(
 export const addToCart = createAsyncThunk(
   "products/addToCart",
   async ({ slug, variations }, { dispatch }) => {
-    if (!isAuthenticated) navigate('/login')
     if (localStorage.getItem("access")) {
       const config = {
         headers: {

@@ -23,6 +23,7 @@ const PersonCarousel = ({ teamMembers }) => {
             overflow="hidden"
             p="4"
             m="2"
+            cursor='pointer'
           >
             <Box
               as="img"

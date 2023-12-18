@@ -21,7 +21,7 @@ const ContactForm = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
-    message: Yup.string().required("Message is required"),
+    message: Yup.string().required("Message is required").max(1000),
   });
 
   const handleSubmit = (values, { resetForm, setSubmitting }) => {
@@ -90,6 +90,8 @@ const ContactForm = () => {
                       as="textarea"
                       placeholder="Your Message"
                       aria-label="Your Message"
+                      maxH='120px'
+    
                     />
                     <FormErrorMessage>{form.errors.message}</FormErrorMessage>
                   </FormControl>

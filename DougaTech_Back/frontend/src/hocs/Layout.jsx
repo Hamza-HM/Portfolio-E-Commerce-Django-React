@@ -6,7 +6,7 @@ import { checkAuthenticated } from "../actions/auth";
 import { fetchCart } from "../actions/cart";
 import { useSelector } from "react-redux";
 import { load_user } from "../actions/profile";
-import { Spinner, Box, Container } from "@chakra-ui/react";
+import { Spinner, Box } from "@chakra-ui/react";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -42,7 +42,7 @@ const Layout = ({ children }) => {
     <>
       {/* Render content only when not loading */}
       {children && !loading && <Navbar cart={cart} />}
-      {children && !loading && children}
+      {children && !loading && <Box as="main">{children}</Box>}
       {children && !loading && <Footer />}
     </>
   );

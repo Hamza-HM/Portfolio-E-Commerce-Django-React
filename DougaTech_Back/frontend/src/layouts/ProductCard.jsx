@@ -37,6 +37,7 @@ const ProductCard = ({
 
   const handleAddToCart = () => {
     if (!isAuthenticated) navigate('/login')
+    console.log(slug, [])
     dispatch(addToCart({ slug, variations: [] }));
   };
   const { colorMode } = useColorMode();

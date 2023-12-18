@@ -20,6 +20,8 @@ import OrderSummary from "./pages/mainPages/OrderSummary";
 import Checkout from "./pages/mainPages/Checkout.";
 
 import './assets/global.css'
+import ContactUs from "./pages/mainPages/ContactUs";
+import Page404 from "./layouts/Page404";
 import About from "./pages/mainPages/About";
 const App = () => {
   return (
@@ -45,7 +47,9 @@ const App = () => {
             <Route exact path="/products/:id" element={<ProductDetail />} />
             <Route exact path="/cart" element={<OrderSummary />} />
             <Route exact path="/checkout" element={<Checkout />} />
+            <Route exact path="/contact" element={<ContactUs />} />
             <Route exact path="/about" element={<About />} />
+            <Route exact path="*" element={<Page404 />} />
           </Routes>
         </Layout>
       </Router>

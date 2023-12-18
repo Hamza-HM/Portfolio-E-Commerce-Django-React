@@ -30,7 +30,7 @@ const Products = () => {
 
   return (
     <>
-      <Center pt={10}>
+      <Center pt={50}>
         <Grid
           templateColumns={{
             base: "1fr",

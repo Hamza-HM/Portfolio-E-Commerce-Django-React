@@ -1,25 +1,18 @@
 import { useEffect } from "react";
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
+  Text,
   Center,
   Box,
   Heading,
   HStack,
   Button,
+  Stack,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { AddIcon, MinusIcon, DeleteIcon } from "@chakra-ui/icons";
 import { removeCartItem, updateItemCartQuantity } from "../../actions/cart";
 import { addToCart } from "../../actions/products";
-
+import { FaPlusSquare, FaMinusSquare } from "react-icons/fa";
 const OrderSummary = () => {
   const orderItems = useSelector(
     (state) => state.cart.shoppingCart?.order_items
@@ -60,6 +53,7 @@ const OrderSummary = () => {
 
   const handleAddQuantity = (slug, variations) => {
     const formatedVariations = FormatVariations(variations);
+    console.log(slug, formatedVariations);
     if (slug && formatedVariations) {
       dispatch(addToCart({ slug, variations: formatedVariations }));
     }
@@ -87,90 +81,86 @@ const OrderSummary = () => {
   }, []);
 
   return (
-    <Center pt="55px">
-      <Box my="5">
-        <Heading my="5" fontSize="lg" textAlign="center">
+    <>
+      {/* Hero Section */}
+      <Box bg="blue.500" color="white" textAlign="center" pb="60px" pt="100px">
+        <Heading as="h1" fontSize="4xl" mb={4}>
           Order Summary
         </Heading>
-        <TableContainer>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th>Item</Th>
-                <Th isNumeric>Variations</Th>
-                <Th>Quantity</Th>
-                <Th isNumeric>Price</Th>
-                <Th isNumeric>Total Price</Th>
-                <Th isNumeric>Remove </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {orderItems &&
-                orderItems.map((orderItem, i) => (
-                  <Tr key={i}>
-                    <Td>{orderItem.item.title}</Td>
-                    <Td>
-                      {orderItem?.item_variations.length > 0 ? (
-                        <div>{renderVariations(orderItem.item_variations)}</div>
-                      ) : (
-                        <>No Variations</>
-                      )}
-                    </Td>
-                    <Td>
-                      <HStack spacing={2}>
-                        <div>{orderItem.quantity}</div>
-                        <AddIcon
-                          fontSize="10px"
-                          border="1px solid grey"
-                          p="1px"
-                          _hover={{ cursor: "pointer" }}
-                          onClick={() =>
-                            handleAddQuantity(
-                              orderItem.item.slug,
-                              orderItem.item_variations
-                            )
-                          }
-                        />
-                        <MinusIcon
-                          fontSize="10px"
-                          border="1px solid grey"
-                          p="1px"
-                          _hover={{ cursor: "pointer" }}
-                          onClick={() =>
-                            handleDecreaseQuantity(
-                              orderItem.item.slug,
-                              orderItem.item_variations
-                            )
-                          }
-                        />
-                      </HStack>
-                    </Td>
-                    <Td isNumeric>{orderItem.item.price} DA</Td>
-                    <Td isNumeric>{orderItem.final_price} DA</Td>
-                    <Td isNumeric>
-                      <Button onClick={() => handleRemoveItem(orderItem.id)}>
-                        <DeleteIcon />
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))}
-            </Tbody>
-            <Tfoot>
-              <Tr>
-                <Th isNumeric colSpan={5}>
-                  Total: {calculateTotalPrice()}DA
-                </Th>
-                <Th isNumeric>
-                  <Button onClick={() => navigate("/checkout")}>
-                    Checkout
-                  </Button>
-                </Th>
-              </Tr>
-            </Tfoot>
-          </Table>
-        </TableContainer>
+        {/* Your slogan or additional information here */}
       </Box>
-    </Center>
+      <Center pt="55px">
+        <Stack direction="column" spacing={4} alignItems="center" w="full">
+          {orderItems &&
+            orderItems.map((orderItem, i) => (
+              <Box
+                key={i}
+                borderWidth="1px"
+                borderRadius="lg"
+                overflow="hidden"
+                boxShadow="md"
+                w="full"
+                maxW="500px"
+                p={4}
+              >
+                <Heading as="h3" size="md" mb={2}>
+                  {orderItem.item.title}
+                </Heading>
+                <Box mb={2}>
+                  {orderItem?.item_variations.length > 0
+                    ? renderVariations(orderItem.item_variations)
+                    : "No Variations"}
+                </Box>
+                <HStack spacing={2} mb={2}>
+                  <Box fontSize="30px" px="10px" color="blue">
+                    {orderItem.quantity}
+                  </Box>
+                  <FaPlusSquare
+                    fontSize="25px"
+                    border="1px solid grey"
+                    p="1px"
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() =>
+                      handleAddQuantity(
+                        orderItem.item.slug,
+                        orderItem.item_variations
+                      )
+                    }
+                  />
+                  <FaMinusSquare
+                    fontSize="25px"
+                    border="1px solid grey"
+                    p="1px"
+                    _hover={{ cursor: "pointer" }}
+                    onClick={() =>
+                      handleDecreaseQuantity(
+                        orderItem.item.slug,
+                        orderItem.item_variations
+                      )
+                    }
+                  />
+                </HStack>
+                <HStack mb={2} fontSize='30px'>
+                  <Box as="h3" fontWeight='bold'>Price:</Box>
+                  <Text>{orderItem.item.price} DA</Text>
+                </HStack>
+                <HStack mb={2} fontSize='30px'>
+                <Box as="h3" fontWeight='bold'>Total Price:</Box>
+                  <Text>{orderItem.final_price} DA</Text>
+                </HStack>
+                <Button onClick={() => handleRemoveItem(orderItem.id)}>
+                  Remove
+                </Button>
+              </Box>
+            ))}
+          <Box textAlign="center">
+            <Button onClick={() => navigate("/checkout")}>
+              Checkout - Total: {calculateTotalPrice()} DA
+            </Button>
+          </Box>
+        </Stack>
+      </Center>
+    </>
   );
 };
 

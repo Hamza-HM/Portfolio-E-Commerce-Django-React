@@ -1,7 +1,6 @@
 import { Box, Center, Grid, Image } from "@chakra-ui/react";
 
 const Feature = () => {
-  console.log("douga");
   return (
     <>
       <Center
@@ -10,8 +9,8 @@ const Feature = () => {
         textAlign="center"
         backgroundColor="#092635"
       >
-        <Box as="h1" w="full" fontSize="50px" mb="10" >
-          Feature
+        <Box as="h1" w="full" fontSize="50px" mb="10" color='white'>
+          Services
         </Box>
         <Grid
           w="100%"

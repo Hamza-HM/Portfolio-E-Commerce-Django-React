@@ -27,6 +27,7 @@ const links = [
   { name: "Home", link: "/" },
   { name: "Products", link: "/products" },
   { name: "About", link: "/about" },
+  { name: "Contact Us", link: "/contact" },
   // { name: "Authenticate", link: "/authenticate" },
 ];
 
@@ -217,7 +218,7 @@ const WithAction = () => {
                   </NavLink>
                 ))}
                 {isAuthenticated ? (
-                  <NavLink to="/" onClick={handleLogout} aria-label="Logout">
+                  <NavLink to="/" onClick={handleLogout} aria-label="Logout" >
                     Logout
                   </NavLink>
                 ) : (
@@ -233,3 +234,146 @@ const WithAction = () => {
 };
 
 export default WithAction;
+
+
+
+    // <Box position="sticky" top="0" zIndex={100}>
+    //   <Box
+    //     bg={useColorModeValue("white", "blackAlpha.900")}
+    //     px={4}
+    //     fontSize={15}
+    //     position="absolute"
+    //     top="0"
+    //     w="100%"
+    //     style={{
+    //       transition: "height 0.3s ease-in-out, transform .3s ease-in-out",
+    //       transform:
+    //         scrollDirection === "down" ? "translateY(-60px)" : "translateY(0)",
+    //       height: isOpen ? "260px" : "60px",
+    //     }}
+    //   >
+    //     <Flex alignItems={"center"} justifyContent={"space-between"} h='full'>
+    //       <IconButton
+    //         size={"md"}
+    //         icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+    //         aria-label={"Open Menu"}
+    //         display={{ md: "none" }}
+    //         bg="transparent"
+    //         onClick={isOpen ? onClose : onOpen}
+    //       />
+    //       <Box>
+    //         <Link to="/" aria-label="Home">
+    //           GraphiCode
+    //         </Link>
+    //       </Box>
+    //       <HStack spacing={8} alignItems={"center"}>
+    //         <HStack
+    //           as={"nav"}
+    //           spacing={4}
+    //           display={{ base: "none", md: "flex" }}
+    //         >
+    //           {links.map((link) => (
+    //             <NavLink key={link.name} path={link.link} name={link.name}>
+    //               {link.name}
+    //             </NavLink>
+    //           ))}
+    //         </HStack>
+    //       </HStack>
+    //       <HStack>
+    //         <IconButton
+    //           display={"flex"}
+    //           rounded="9px"
+    //           size="sm"
+    //           bg="transparent"
+    //           onClick={toggleColorMode}
+    //           aria-label="Toggle color mode"
+    //           icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+    //         />
+    //         {isAuthenticated ? (
+    //           <>
+    //             <Box display="flex" alignItems="center">
+    //               {quantity > 0 && (
+    //                 <Box
+    //                   position="relative "
+    //                   top="-8px"
+    //                   right="-8px"
+    //                   bg="red.500"
+    //                   color="white"
+    //                   borderRadius="full"
+    //                   padding="2px 6px"
+    //                   fontSize="xs"
+    //                 >
+    //                   {quantity}
+    //                 </Box>
+    //               )}
+    //               <NavLink path="/cart" onClick={onClose}>
+    //                 <IconButton
+    //                   variant="shadow"
+    //                   area-label="Cart"
+    //                   icon={<AiOutlineShoppingCart />}
+    //                 />
+    //               </NavLink>
+    //             </Box>
+    //             <Box display={{ base: "none", md: "none", lg: "flex" }} gap={8}>
+    //               <Link to="/" onClick={handleLogout} aria-label="Logout">
+    //                 Logout
+    //               </Link>
+    //             </Box>
+    //             <NavLink
+    //               aria-label="Profile"
+    //               path={"/profile"}
+    //               onClick={onClose}
+    //             >
+    //               <CgProfile size="20px" />
+    //             </NavLink>
+    //           </>
+    //         ) : (
+    //           authLinks.map((link) => (
+    //             <NavLink
+    //               key={link.name}
+    //               name={link.name}
+    //               path={link.link}
+    //               onClick={onClose}
+    //             >
+    //               {link.name}
+    //             </NavLink>
+    //           ))
+    //         )}
+    //       </HStack>
+    //     </Flex>
+    //     {/* Mobile */}
+    //     {isOpen && (
+    //       <ScaleFade in={isOpen} initialScale={0.8} delay={0.2}>
+    //         <Box p={5}>
+    //           <Stack as={"nav"} spacing={6}>
+    //             {links.map((link) => (
+    //               <NavLink
+    //                 className="douga"
+    //                 key={link.name}
+    //                 onClick={onClose}
+    //                 path={link.link}
+    //                 name={link.name}
+    //               >
+    //                 {link.name}
+    //               </NavLink>
+    //             ))}
+    //             {isAuthenticated ? (
+    //               <NavLink
+    //                 to="/"
+    //                 onClick={() => {
+    //                   handleLogout();
+    //                   onClose();
+    //                 }}
+    //                 aria-label="Logout"
+    //               >
+    //                 Logout
+    //               </NavLink>
+    //             ) : (
+    //               <></>
+    //             )}
+    //           </Stack>
+    //         </Box>
+    //       </ScaleFade>
+    //     )}
+    //   </Box>
+    // </Box>
