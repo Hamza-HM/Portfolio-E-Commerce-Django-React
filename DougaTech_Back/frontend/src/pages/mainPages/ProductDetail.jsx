@@ -136,7 +136,6 @@ const ProductDetail = () => {
             p="4"
             borderWidth="1px"
             borderRadius="lg"
-            boxShadow="lg"
             bg={cartBgColor[colorMode]}
             boxShadow={boxShadow[colorMode]}
             _hover={{

@@ -1,12 +1,43 @@
 import React from "react";
 import { Box, Flex, Heading, Text, SimpleGrid, Button } from "@chakra-ui/react";
+import AlertMessage from "../../layouts/AlertMessage";
+import GoogleMap from "../../layouts/about page/GoogleMap";
+import ContactForm from "../../layouts/about page/ContactForm";
+import PersonCarousel from "../../layouts/about page/PersonCarousel ";
 
 const About = () => {
+  const teamMembers = [
+    {
+      name: "John Doe",
+      position: "CEO",
+      description: "Responsible for strategic planning and overall company direction.",
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    },
+    {
+      name: "Jane Smith",
+      position: "Lead Developer",
+      description: "Leads the development team and ensures timely project deliveries.",
+      image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600'
+    },
+    {
+      name: "John Doe",
+      position: "CEO",
+      description: "Responsible for strategic planning and overall company direction.",
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    },
+    {
+      name: "Jane Smith",
+      position: "Lead Developer",
+      description: "Leads the development team and ensures timely project deliveries.",
+      image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600'
+    },
+    // Add more team member descriptions as needed
+  ];
   return (
     <>
       {/* Hero Banner */}
       <Box
-        bgImage="url('https://img.freepik.com/photos-gratuite/abstrait-bleu-degrade-bleu-fonce-lisse-studio-vignette-noir_1258-108879.jpg?w=1380&t=st=1702829545~exp=1702830145~hmac=cc3013e908e43201268a777f1a72106b839a82c0381de0017397f8557a1751fc')" // Replace 'hero-image.jpg' with your image path
+        bgImage="url('https://img.freepik.com/photos-gratuite/concept-entreprise-innovation-poignee-main-partenariat_53876-104048.jpg?w=1380&t=st=1702907238~exp=1702907838~hmac=84fb83ef035a8ce706fd28fb9969d89aa0d778ccdae73b9963170bcdc3d456bf')"
         bgSize="cover"
         bgPosition="center"
         height="50vh"
@@ -27,51 +58,27 @@ const About = () => {
 
       {/* Information Columns */}
       <Flex justifyContent="center" p="40px">
-        <SimpleGrid columns={2} spacing={10} width="80%">
-          {/* First Column */}
+        <SimpleGrid
+          gridTemplateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+          spacing={10}
+          width="80%"
+          alignItems="center"
+        >
           <Box>
-            <Heading as="h2" fontSize="2xl" mb="3">
-              Column 1 Title
-            </Heading>
-            <Text>
-              Information about your company, services, or mission can go here.
-            </Text>
+            <ContactForm />
           </Box>
-
-          {/* Second Column */}
           <Box>
-            <Heading as="h2" fontSize="2xl" mb="3">
-              Column 2 Title
-            </Heading>
-            <Text>
-              More details or other relevant information can be placed here.
-            </Text>
+            <GoogleMap />
           </Box>
         </SimpleGrid>
       </Flex>
 
       {/* People Section */}
-      <Box bg="#f4f4f4" py="40px" textAlign="center">
+      <Box py="40px" textAlign="center">
         <Heading as="h2" fontSize="3xl" mb="4">
           Meet Our Team
         </Heading>
-        {/* Add your team members' information or photos here */}
-        <Flex justifyContent="center">
-          {/* Example of a person's card */}
-          <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" p="4" m="2">
-            <Box as="img" src="person1.jpg" alt="Person 1" w="100%" h="200px" objectFit="cover" />
-            <Heading as="h3" fontSize="xl" mt="2" mb="1">
-              John Doe
-            </Heading>
-            <Text>Position</Text>
-            {/* Additional information about the person */}
-          </Box>
-
-          {/* Add more team members' cards as needed */}
-        </Flex>
-        <Flex justify='center'>
-          <Button>Contact Us</Button>
-        </Flex>
+        <PersonCarousel teamMembers={teamMembers} />
       </Box>
     </>
   );

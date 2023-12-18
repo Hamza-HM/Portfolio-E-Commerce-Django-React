@@ -12,7 +12,6 @@ const AddressCard = ({ addrData }) => {
       p={4}
       mb={4}
       borderRadius="md"
-      boxShadow="md"
       transition="transform 0.5s, box-shadow 0.5s"
       _hover={{
         transform: "translateY(-5px)",

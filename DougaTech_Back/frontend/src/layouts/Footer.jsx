@@ -2,16 +2,15 @@ import { Box, VStack, Flex, Heading, useColorMode } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const { colorMode } = useColorMode();
-  const bgColor = { light: "gray.200", dark: "gray.800" };
-  const textColor = { light: "gray.500", dark: "gray.100" };
+  // const { colorMode } = useColorMode();
+  // const bgColor = { light: "gray.200", dark: "gray.800" };
 
   return (
     <>
       <Box
         as="footer"
         py={6}
-        bg={bgColor[colorMode]}
+        // bg={bgColor[colorMode]}
         display="grid"
         gridTemplateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }}
         alignItems="center"

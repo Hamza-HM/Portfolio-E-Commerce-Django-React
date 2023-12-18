@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App.jsx";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { CgColorBucket } from "react-icons/cg";
 
 const theme = extendTheme({
   components: {
@@ -25,6 +24,14 @@ const theme = extendTheme({
           bg: "white",
         },
       },
+      // color: {color: 'white'},
+      // p: {color: 'white'},
+      // h1: {color: 'white'},
+      // h2: {color: 'white'},
+      // h3: {color: 'white'},
+      // h4: {color: 'white'},
+      
+
       body: {
         bg: props.colorMode === "dark" ? "gray.800" : "white",
       },
